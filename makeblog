@@ -1,0 +1,198 @@
+#!/usr/bin/python
+from argparse import ArgumentParser, Namespace
+from datetime import datetime
+from operator import attrgetter
+from os import listdir, access, F_OK, makedirs, system, chdir
+from os.path import dirname, exists
+from pygments.formatters.html import HtmlFormatter
+from pygments.lexers import get_lexer_by_name
+from pygments.util import ClassNotFound
+from pygments import highlight
+from pytz import timezone
+from re import compile, escape, MULTILINE, DOTALL
+from sys import argv
+from time import strftime
+from uuid import uuid4 as uuidgen
+from yaml import load
+from jinja2 import FileSystemLoader, Environment
+from http.server import SimpleHTTPRequestHandler
+from socketserver import TCPServer
+
+BASE_URL = 'http://blog.stefan-betz.net'
+BASE_AUTHOR = 'encbladexp'
+CATEGORIES = 'allgemeines, android, arch, debian, gastbeitrag, gebaeudeautomatisierung, hardware, homeserver, linux, piratenpartei, python, sicherheit, software, ubuntu, windows'
+DATEFORMAT='%Y/%m/%d %H:%M:%S'
+TIMEZONE='Europe/Berlin'
+
+SLUG_ITEMS = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
+               'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
+               'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6',
+               '7', '8', '9', '-', ':', '_' ]
+SLUG_REPLACE = { ' ':'-', 'ß':'ss', 'ü':'ue', 'ö':'oe', 'ä':'ae' }
+SLUG_FILENAME_EXCLUDE = [ ':' ]
+
+opts = ArgumentParser(prog='makeblog',description='A simple offline Blog.')
+opts.add_argument('-t', '--title', metavar='TITLE', help='Create a new Article with Title')
+opts.add_argument('-b', '--build', action='store_true', help='Build this Blog')
+opts.add_argument('-s', '--serve', action='store_true', help='Serve this Blog')
+options = Namespace()
+opts.parse_args(namespace=options)
+
+code_re = compile(
+    r"(?:^|\s)"
+    r"\$\$code"
+    r"(?P<args>\([^\r\n]*\))?"
+    r"[^\r\n]*\r?\n"
+    r"(?P<code>.*?)\s\$\$/code"
+    , DOTALL)
+
+jinja = Environment(loader=FileSystemLoader('templates'))
+
+def pygments_css(formatter):
+    with open(directorymaker('css/pygments_fruity.css'), "w") as f:
+        f.write(formatter.get_style_defs('.pygments_fruity'))
+
+def highlight_code(code, language, formatter):
+    try:
+        lexer = get_lexer_by_name(language)
+    except ClassNotFound:
+        lexer = get_lexer_by_name("text")
+    highlighted = "\n\n{0}\n\n".format(highlight(code, lexer, formatter))
+    return highlighted
+
+def pygmentify(func):
+    def decorator(self):
+        post = func(self)
+        substitutions = {}
+        for match in code_re.finditer(post):
+            args = match.group('args')
+            lang = 'text'
+            if args:
+                if 'lang' in args:
+                    lang = args.strip('(').strip(')').split('=')[1]
+            formatter = HtmlFormatter(cssclass='pygments_fruity', style='fruity')
+            pygments_css(formatter)
+            substitutions[match.group()] = highlight_code(match.group('code'), lang, formatter)
+        if len(substitutions) > 0:
+            p = compile('|'.join(map(escape, substitutions)))
+            post = p.sub(lambda x: substitutions[x.group(0)], post)
+            return post
+        else:
+            return post
+    return decorator
+
+class Post(object):
+    yaml_sep = compile("^---$", MULTILINE)
+
+    def __init__(self):
+        self.author = None
+        self.title = None
+        self.permalink = None
+        self.guid = None
+        self.categories = []
+        self.date = timezone(TIMEZONE).localize(datetime.now())
+        self.updated = None
+        self._content = None
+        self.next = None
+        self.prev = None
+
+    def load(self, filename):
+        with open(filename) as f:
+            parts = Post.yaml_sep.split(f.read(), maxsplit=2)
+        header = load(parts[1])
+        self.author = header['author']
+        self.title = header['title']
+        if 'permalink' in header:
+            self.permalink = header['permalink']
+        self.guid = header['guid']
+        self.categories = [category.strip() for category in header['categories'].split(',')]
+        self.date = timezone(TIMEZONE).localize(datetime.strptime(header['date'], DATEFORMAT))
+        if 'updated' in header:
+            self.updated = timezone(TIMEZONE).localize(datetime.strptime(header['updated'], DATEFORMAT))
+        self._content = parts[2]
+
+    def render(self):
+        template = jinja.get_template('article.html')
+        with open(directorymaker('%s/%s/index.html' % (self.date.strftime('%Y/%m/%d'), slugify(self.title))), 'w') as f:
+            f.write(template.render(post=self))
+
+    @pygmentify
+    def content(self):
+        return self._content
+
+def slugify(text, filename=False):
+    """
+    Slugifies a string.
+    """
+    slug = ''
+    lowered = text.lower()
+    if filename:
+        for excludedchar in SLUG_FILENAME_EXCLUDE:
+            lowered = lowered.replace(excludedchar, '')
+    for char in lowered:
+        if char in SLUG_REPLACE:
+            slug = slug + SLUG_REPLACE[char]
+        elif char in SLUG_ITEMS:
+            slug = slug + char
+    return slug
+
+def newfile(slug):
+    """
+    Return a new file object base on slug and next free id in _posts/.
+    """
+    idre = compile("([0-9]*).*")
+    files = sorted([int(idre.match(filename).group(1)) for filename in listdir("posts/") if idre.match(filename)])
+    fileid = files[-1]+1
+    return "posts/%i-%s.html" % ( fileid, slug )
+
+def directorymaker(path):
+    """
+    Creates directories required for path.
+    """
+    path = 'dst/%s' % path
+    directories = dirname(path)
+    if not exists(directories):
+        makedirs(directories)
+    return path
+
+if options.title:
+    filename = newfile(slugify(options.title))
+    if access(filename, F_OK):
+        print("Sorry, file already exists, but why?")
+        raise SystemExit
+    with open(filename, "w") as f:
+        f.write("---\n")
+        f.write("categories: %s\n" % CATEGORIES)
+        f.write("permalink: %s/%s/%s\n" % (BASE_URL, strftime('%Y/%m/%d'), slugify(options.title)))
+        f.write("guid: %s\n" % str(uuidgen()))
+        f.write("title: %s\n" % options.title)
+        f.write("author: %s\n" % BASE_AUTHOR)
+        f.write("date: %s\n" % strftime('%Y/%m/%d %H:%M:%S'))
+        f.write("---\n")
+    print(filename)
+elif options.build:
+    # load all posts
+    unsortedposts = []
+    for filename in listdir('posts'):
+        p = Post()
+        p.load('posts/%s' % filename)
+        unsortedposts.append(p)
+    # sort posts by date
+    posts = sorted(unsortedposts, key=attrgetter('date'))
+    # link next/prev posts
+    for post in posts:
+        i = posts.index(post)
+        if i:
+            post.prev = posts[i-1]
+        if i != len(posts)-1:
+            post.next = posts[i+1]
+    # rsync src/ to dst/ for static stuff
+    system('rsync -a src/ dst')
+    # render all post articles
+    for post in posts:
+        post.render()
+elif options.serve:
+    print("Starting Webserver for http://127.0.0.1:8000/")
+    chdir('dst/')
+    httpd = TCPServer(('127.0.0.1',8000), SimpleHTTPRequestHandler)
+    httpd.serve_forever()
