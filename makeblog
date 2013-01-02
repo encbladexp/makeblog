@@ -35,6 +35,7 @@ opts = ArgumentParser(prog='makeblog',description='A simple offline Blog.')
 opts.add_argument('-t', '--title', metavar='TITLE', help='Create a new Article with Title')
 opts.add_argument('-b', '--build', action='store_true', help='Build this Blog')
 opts.add_argument('-s', '--serve', action='store_true', help='Serve this Blog')
+opts.add_argument('-i', '--init', action='store_true', help='Create required directories')
 options = Namespace()
 opts.parse_args(namespace=options)
 
@@ -274,9 +275,13 @@ elif options.build:
                 with open(directorymaker(fname), 'w') as f:
                     t = jinja.get_template(fname)
                     f.write(t.render())
-    # fix permapage URLs
 elif options.serve:
     print("Starting Webserver for http://127.0.0.1:8000/")
     chdir('dst/')
     httpd = TCPServer(('127.0.0.1',8000), SimpleHTTPRequestHandler)
     httpd.serve_forever()
+elif options.init:
+    if not exists('src'):
+        makedirs('src')
+    if not exists('posts'):
+        makedirs('posts')
