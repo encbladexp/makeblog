@@ -2,7 +2,7 @@
 from argparse import ArgumentParser, Namespace
 from datetime import datetime
 from operator import attrgetter
-from os import listdir, access, F_OK, makedirs, system, chdir
+from os import listdir, access, F_OK, makedirs, system, chdir, walk
 from os.path import dirname, exists
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
@@ -46,7 +46,7 @@ code_re = compile(
     r"(?P<code>.*?)\s\$\$/code"
     , DOTALL)
 
-jinja = Environment(loader=FileSystemLoader('templates'))
+jinja = Environment(loader=FileSystemLoader(['templates','src']))
 
 def pygments_css(formatter):
     with open(directorymaker('css/pygments_fruity.css'), "w") as f:
@@ -107,18 +107,27 @@ class Post(object):
         self.guid = header['guid']
         self.categories = [category.strip() for category in header['categories'].split(',')]
         self.date = timezone(TIMEZONE).localize(datetime.strptime(header['date'], DATEFORMAT))
+        self.updated = self.date
         if 'updated' in header:
             self.updated = timezone(TIMEZONE).localize(datetime.strptime(header['updated'], DATEFORMAT))
+        if not self.permalink:
+            self.permalink = '%s/%s/%s/index.html' % (BASE_URL, self.date.strftime('%Y/%m/%d'), slugify(self.title))
         self._content = parts[2]
 
     def render(self):
         template = jinja.get_template('article.html')
-        with open(directorymaker('%s/%s/index.html' % (self.date.strftime('%Y/%m/%d'), slugify(self.title))), 'w') as f:
+        with open(directorymaker(self.permalink.lstrip('%s/' % BASE_URL)), 'w') as f:
             f.write(template.render(post=self))
 
     @pygmentify
     def content(self):
         return self._content
+
+class Blog(object):
+    def __init__(self):
+        self.name = "[ENC]Bladexp's Blog"
+        self.baseurl = BASE_URL
+        self.description = 'Was die Welt nicht alles braucht...'
 
 def slugify(text, filename=False):
     """
@@ -171,6 +180,9 @@ if options.title:
         f.write("---\n")
     print(filename)
 elif options.build:
+    # config
+    jinja.globals['blog'] = Blog()
+    jinja.globals['now'] = datetime.utcnow()
     # load all posts
     unsortedposts = []
     for filename in listdir('posts'):
@@ -191,6 +203,78 @@ elif options.build:
     # render all post articles
     for post in posts:
         post.render()
+    # render index page
+    with open(directorymaker('index.html'), 'w') as f:
+        t = jinja.get_template('chronological.html')
+        startposts = posts[-5:]
+        startposts.reverse()
+        f.write(t.render(posts=startposts))
+    # render main feed
+    with open(directorymaker('feed.atom/index.xml'), 'w') as f:
+        t = jinja.get_template('atom.html')
+        feedposts = posts[-10:]
+        feedposts.reverse()
+        f.write(t.render(posts=feedposts))
+    # render category pages
+    categoryposts = {}
+    for post in posts:
+        for category in post.categories:
+            if not category in categoryposts:
+                categoryposts[category] = []
+            categoryposts[category].append(post)
+    for category in categoryposts.keys():
+        with open(directorymaker('category/%s/index.html'% category), 'w') as f:
+            t = jinja.get_template('category.html')
+            thisposts = sorted(categoryposts[category], key=attrgetter('date'))
+            thisposts.reverse()
+            f.write(t.render(category=category, posts=thisposts))
+    # render category index
+    with open(directorymaker('category/index.html'), 'w') as f:
+        t = jinja.get_template('categories.html')
+        categories = list(categoryposts.keys())
+        categories.sort()
+        f.write(t.render(categories=categories))
+    # render category feeds
+    for category in categoryposts.keys():
+        with open(directorymaker('category/%s/feed.atom/index.xml' % category), 'w') as f:
+            t = jinja.get_template('atom.html')
+            feedposts = sorted(categoryposts[category], key=attrgetter('date'))[-10:]
+            feedposts.reverse()
+            f.write(t.render(posts=feedposts))
+    # render archive pages
+    timeposts = {}
+    for post in posts:
+        if not post.date.year in timeposts:
+            timeposts[post.date.year] = {}
+        if not post.date.month in timeposts[post.date.year]:
+            timeposts[post.date.year][post.date.month] = []
+        timeposts[post.date.year][post.date.month].append(post)
+    for year in timeposts.keys():
+        for month in timeposts[year].keys():
+            with open(directorymaker('archive/%s/%s/index.html' % ( year, month )), 'w') as f:
+                t = jinja.get_template('archive-posts.html')
+                archiveposts = sorted(timeposts[year][month], key=attrgetter('date'))
+                archiveposts.reverse()
+                f.write(t.render(year=year, month=month, posts=archiveposts))
+        with open(directorymaker('archive/%s/index.html' % year), 'w') as f:
+            t = jinja.get_template('archive-annual.html')
+            months = list(timeposts[year].keys())
+            months.sort()
+            f.write(t.render(months=months, year=year, yearposts=timeposts[year]))
+    with open(directorymaker('archive/index.html'), 'w') as f:
+        t = jinja.get_template('archive.html')
+        years = list(timeposts.keys())
+        years.sort()
+        f.write(t.render(years=years))
+    # static page rendering
+    for path, directories, files in walk('src/'):
+        for filename in files:
+            if filename.endswith('.html'):
+                fname = '%s/%s' % ( path.lstrip('src/'), filename )
+                with open(directorymaker(fname), 'w') as f:
+                    t = jinja.get_template(fname)
+                    f.write(t.render())
+    # fix permapage URLs
 elif options.serve:
     print("Starting Webserver for http://127.0.0.1:8000/")
     chdir('dst/')

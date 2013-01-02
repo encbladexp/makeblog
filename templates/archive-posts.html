@@ -1,0 +1,9 @@
+{% extends 'site.html' %}
+{% from 'post.html' import postrenderer %}
+{% block title %}{{ blog.name }} - Archiv {{ year }}-{{ month }}{% endblock %}
+{% block content %}
+<h1>Archiv für {{ year }}-{{ month }}</h1>
+{% for post in posts %}
+{{ postrenderer(post) }}
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'site.html' %}
+{% block title %}{{ blog.name }} - Kategorien{% endblock %}
+{% block content %}
+<h1>Kategorien</h1>
+<ul>
+{% for category in categories %}
+<li><a href="/category/{{ category }}">{{ category }}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}

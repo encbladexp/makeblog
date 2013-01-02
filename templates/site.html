@@ -1,0 +1,60 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>{% block title %}{{ blog.name }}{% endblock %}</title>
+<link rel="alternate" type="application/atom+xml" title="Atom 1.0"
+href="/feed.atom" />
+<link rel='stylesheet' href='/css/style.css' type='text/css' />
+<link rel='stylesheet' href='/css/pygments_fruity.css' type='text/css' />
+<link rel="publisher" href="https://plus.google.com/103105755986251553871" />
+<script type="text/javascript" src="/js/jquery.js"></script> 
+<script type="text/javascript" src="/js/socialshareprivacy/jquery.socialshareprivacy.min.js"></script>
+<script type="text/javascript">
+ jQuery(document).ready(function($){
+  if($('#socialshareprivacy').length > 0){
+   $('#socialshareprivacy').socialSharePrivacy({
+    services:{
+     facebook:{
+      'status':'off',
+     },
+     twitter:{
+      'dummy_img':'/js/socialshareprivacy/socialshareprivacy/images/dummy_twitter.png',
+      'perma_option':'off',
+     },
+     gplus:{
+      'dummy_img':'/js/socialshareprivacy/socialshareprivacy/images/dummy_gplus.png',
+      'perma_option':'off',
+     },
+    },
+    'css_path':'/js/socialshareprivacy/socialshareprivacy/socialshareprivacy.css',
+   }); 
+  }
+});
+</script>
+</head>
+<body>
+<div class="header">
+<h1><a href="{{ blog.baseurl }}">{{ blog.name }}</a></h1>
+<h2>{{ blog.description }}</h2>
+<p>
+<a href="/archive/">Archiv</a>
+<a href="/category/">Kategorien</a>
+<a href="/impressum">Impressum</a>
+</p>
+</div>
+<div class="content">
+{% block content %}
+{% endblock %}
+</div>
+<div class="footer">
+<p>Spenden via <a href="http://bitcoin.org">Bitcoin</a> an
+<em>1Pn2cMyWJ9d3gYxkw82T3hnZAHCjGTPxen</em> |
+<a href="http://www.amazon.de/registry/wishlist/1SE52K53P3DE3">Amazon Wunschzettel</a> |
+<a href="https://plus.google.com/103105755986251553871?rel=author">Google+</a> |
+<a href="https://twitter.com/encbladexp">Twitter</a> |
+Powered by <a href="https://bitbucket.org/encbladexp/makeblog">makeblog</a>.</p>
+</div>
+</body>
+</html>

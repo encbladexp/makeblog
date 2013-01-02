@@ -1,0 +1,7 @@
+{% extends 'site.html' %}
+{% from 'post.html' import postlistrenderer %}
+{% block title %}{{ blog.name }} - Kategorie {{ category }}{% endblock %}
+{% block content %}
+<h1>Kategorie {{ category }}</h1>
+{{ postlistrenderer(posts) }}
+{% endblock %}

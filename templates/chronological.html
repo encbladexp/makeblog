@@ -1,0 +1,7 @@
+{% extends 'site.html' %}
+{% from 'post.html' import postrenderer %}
+{% block content %}
+{% for post in posts %}
+{{ postrenderer(post) }}
+{% endfor %}
+{% endblock %}

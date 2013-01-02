@@ -1,0 +1,7 @@
+{% extends 'site.html' %}
+{% from 'post.html' import postrenderer %}
+{% block title %}{{ blog.name }} - {{ post.title }}{% endblock %}
+{% block content %}
+{{ postrenderer(post) }}
+<div id="socialshareprivacy"></div>
+{% endblock %}
