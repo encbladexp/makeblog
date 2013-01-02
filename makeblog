@@ -126,9 +126,9 @@ class Post(object):
 
 class Blog(object):
     def __init__(self):
-        self.name = "[ENC]Bladexp's Blog"
+        self.name = "[ENC]BladeXP's Blog"
         self.baseurl = BASE_URL
-        self.description = 'Was die Welt nicht alles braucht...'
+        self.description = 'Was die Welt nicht alles braucht!'
 
 def slugify(text, filename=False):
     """
