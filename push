@@ -1,0 +1,7 @@
+#!/bin/bash
+echo "Copy dst to target..."
+mv dst blog
+tar cJ blog | ssh strato1 tar xJ
+echo "Removeing dst content..."
+rm -r blog
+echo "All fine, Please run sudo update-blog on your remote target."
