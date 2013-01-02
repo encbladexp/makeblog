@@ -19,7 +19,7 @@
     <name>{{ post.author }}</name>
     <uri>{{ blog.baseurl }}</uri>
     </author>
-    <title type="html"><![CDATA[${post.title}]]></title>
+    <title type="html"><![CDATA[{{post.title}}]]></title>
     <link rel="alternate" type="text/html" href="{{ post.permalink }}" />
     <id>{{ post.permalink }}</id>
     <updated>{{post.updated.strftime("%Y-%m-%dT%H:%M:%SZ")}}</updated>
