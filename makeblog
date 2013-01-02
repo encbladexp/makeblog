@@ -127,12 +127,12 @@ class Post(object):
         if 'updated' in header:
             self.updated = timezone(TIMEZONE).localize(datetime.strptime(header['updated'], DATEFORMAT))
         if not self.permalink:
-            self.permalink = '%s/%s/%s/index.html' % (BASE_URL, self.date.strftime('%Y/%m/%d'), slugify(self.title))
+            self.permalink = '%s/%s/%s' % (BASE_URL, self.date.strftime('%Y/%m/%d'), slugify(self.title))
         self._content = parts[2]
 
     def render(self):
         template = jinja.get_template('article.html')
-        with open(directorymaker(self.permalink.lstrip('%s/' % BASE_URL)), 'w') as f:
+        with open(directorymaker('%s/index.html' % self.permalink.lstrip('%s/' % BASE_URL)), 'w') as f:
             f.write(template.render(post=self))
 
     @pygmentify
