@@ -1,16 +1,12 @@
 {% macro postrenderer(post) %}
-<div class="post">
-<h1 class="post_title"><a href="{{ post.permalink }}" name="{{ post.slug }}" rel="bookmark" title="Permanent Link to {{ post.title }}">{{post.title}}</a></h1>
-<div class="post_header">{{post.date.strftime("%Y-%m-%d %H:%M")}} | categories: 
+<h1 class='bottom'><a href="{{ post.permalink }}" name="{{ post.slug }}" rel="bookmark" title="Permanent Link to {{ post.title }}">{{post.title}}</a></h1>
+<div class='quiet'>{{post.date.strftime("%Y-%m-%d %H:%M")}} | categories: 
 {% for category in post.categories %}
 <a href="/category/{{ category }}">{{ category }}</a>
 {% endfor %}
 </div>
-<div class="post_content">
 {{ post.content() }}
-</div>
 <hr/>
-</div>
 {% endmacro %}
 {% macro postlistrenderer(posts) %}
 <ul>

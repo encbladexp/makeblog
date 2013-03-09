@@ -6,7 +6,9 @@
 <title>{% block title %}{{ blog.name }}{% endblock %}</title>
 <link rel="alternate" type="application/atom+xml" title="Atom 1.0"
 href="/feed.atom" />
-<link rel='stylesheet' href='/css/style.css' type='text/css' />
+<link rel='stylesheet' href='/blueprint-css/screen.css' type='text/css' media='screen, projection' />
+<link rel='stylesheet' href='/blueprint-css/plugins/fancy-type/screen.css' type='text/css' media='screen, projection' />
+<link rel='stylesheet' href='/blueprint-css/print.css' type='text/css' media='print' />
 <link rel='stylesheet' href='/css/pygments_fruity.css' type='text/css' />
 <link rel="publisher" href="https://plus.google.com/103105755986251553871" />
 <link rel="icon" href="/favicon.ico" type="image/x-icon" />
@@ -36,26 +38,61 @@ href="/feed.atom" />
 </script>
 </head>
 <body>
-<div class="header">
-<h1><a href="{{ blog.baseurl }}">{{ blog.name }}</a></h1>
-<h2>{{ blog.description }}</h2>
-<p>
-<a href="/archive/">Archiv</a>
-<a href="/category/">Kategorien</a>
-<a href="/impressum">Impressum</a>
-</p>
+<div class='container'>
+<div id='header-container' class='span-24 last'>
+<div id='header-image-area' class='span-4 first'>
+<img src='/archlinux-tux.png' alt='Arch Linux Tux' id='header-image' />
 </div>
-<div class="content">
+<div id='header-text-area' class='span-20 last'>
+<h1><a href="{{ blog.baseurl }}">{{ blog.name }}</a></h1>
+<h2 class='alt'>{{ blog.description }}</h2>
+</div>
+<hr />
+</div>
+<div id='content-container' class='span-24 last'>
+<div id='content-area' class='span-16 colborder'>
 {% block content %}
 {% endblock %}
 </div>
-<div class="footer">
-<p>Spenden via <a href="http://bitcoin.org">Bitcoin</a> an
-<em>1Pn2cMyWJ9d3gYxkw82T3hnZAHCjGTPxen</em> |
-<a href="http://www.amazon.de/registry/wishlist/1SE52K53P3DE3">Amazon Wunschzettel</a> |
-<a href="https://plus.google.com/103105755986251553871?rel=author" rel="publisher">Google+</a> |
-<a href="https://twitter.com/encbladexp">Twitter</a> |
-Powered by <a href="https://bitbucket.org/encbladexp/makeblog">makeblog</a>.</p>
+<div id='sidebar-area' class='span-7 last'>
+<!-- Navigationsbox -->	
+<div id='navigation'>
+<h3 class='caps'>Navigation</h3>
+<div class='box'>
+<a href="/archive/">Archiv</a><br />
+<a href="/category/">Kategorien</a><br />
+<a href="/impressum">Impressum</a>
+</div>
+</div>
+<!-- Ende Navigationsbox -->
+<!-- Authorbox -->	
+<div id='authorinfo'>
+<h3 class='caps'>Autor</h3>
+<div class='box'>
+<a href="https://plus.google.com/103105755986251553871?rel=author" rel="publisher"><img src='/gplus.png' alt='Google+' /></a>
+<a href="https://twitter.com/encbladexp"><img src='/twitter.png' alt='Twitter' /></a>
+</div>
+</div>
+<!-- Ende Authorbox -->
+<!-- Spendenbox -->	
+<div id='donateinfo'>
+<h3 class='caps'>Spenden</h3>
+<div class='box'>
+<a href="http://www.amazon.de/registry/wishlist/1SE52K53P3DE3">Amazon Wunschzettel</a><br />
+<a href="http://bitcoin.org">Bitcoin</a> an: <em>1Pn2cMyWJ9d3gYxkw82T3hnZAHCjGTPxen</em>
+</div>
+</div>
+<!-- Ende Spendenbox -->
+<!-- Softwarebox -->	
+<div id='softwareinfo'>
+<h3 class='caps'>Software</h3>
+<div class='box'>
+Powered by <a href="https://bitbucket.org/encbladexp/makeblog">makeblog</a>.
+</div>
+</div>
+<!-- Ende Softwarebox -->
+</div>
+</div>	
 </div>
 </body>
 </html>
