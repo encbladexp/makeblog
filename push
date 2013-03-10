@@ -1,7 +1,6 @@
 #!/bin/bash
-echo "Copy dst to target..."
-mv dst blog
-tar cJ blog | ssh strato1 tar xJ
+echo "Rsync dst to target..."
+rsync -zrv --delete dst/ strato1:/home/stefan/blog
 echo "Removeing dst content..."
-rm -r blog
+rm -r dst
 echo "All fine, Please run sudo update-blog on your remote target."
