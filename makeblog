@@ -195,7 +195,7 @@ if options.title:
         f.write("guid: %s\n" % str(uuidgen()))
         f.write("title: %s\n" % options.title)
         f.write("author: %s\n" % BASE_AUTHOR)
-        f.write("date: %s\n" % strftime('%Y/%m/%d %H:%M:%S'))
+        f.write("date: %s\n" % strftime(DATEFORMAT))
         f.write("---\n")
     print(filename)
 elif options.build:
