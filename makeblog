@@ -170,7 +170,7 @@ def newfile(slug):
     """
     idre = compile("([0-9]*).*")
     files = sorted([int(idre.match(filename).group(1)) for filename in listdir("posts/") if idre.match(filename)])
-    fileid = files[-1]+1
+    fileid = 1 if len(files) == 0 else files[-1]+1
     return "posts/%i-%s.html" % ( fileid, slug )
 
 def directorymaker(path):
