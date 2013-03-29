@@ -308,7 +308,6 @@ elif options.serve:
     httpd = TCPServer(('127.0.0.1',8000), SimpleHTTPRequestHandler)
     httpd.serve_forever()
 elif options.init:
-    if not exists('src'):
-        makedirs('src')
-    if not exists('posts'):
-        makedirs('posts')
+    for directory in ('src','posts','drafts'):
+        if not exists(directory):
+            makedirs(directory)
