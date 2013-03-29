@@ -3,3 +3,4 @@ src/*
 dst/*
 posts/*
 drafts/*
+config.json
