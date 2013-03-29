@@ -1,6 +1,0 @@
-Requirements:
-* Python 3
- * Jinja 2
- * Pygments
- * YAML
- * PyTZ
