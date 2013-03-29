@@ -1,0 +1,6 @@
+* Multi Author Support (Info Area per Article Author)
+* System Wide Install Support via setup.py
+* Theme Support with sane defaults
+* Draft rendering mode
+* Rendering Cache
+* Render only changed articles, not entire Blog
