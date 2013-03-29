@@ -8,7 +8,6 @@ required stuff. Mostly inspired by /dev/null
 * Python 3
 * Jinja 2
 * Pygments
-* YAML
 * PyTZ
 
 ## Usage

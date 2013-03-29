@@ -31,7 +31,6 @@ from uuid import uuid4 as uuidgen
 from jinja2 import FileSystemLoader, Environment
 from http.server import SimpleHTTPRequestHandler
 from socketserver import TCPServer
-import yaml
 import json
 
 SLUG_ITEMS = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
@@ -93,7 +92,7 @@ def pygmentify(func):
     return decorator
 
 class Post(object):
-    yaml_sep = compile("^---$", MULTILINE)
+    json_sep = compile("^---$", MULTILINE)
 
     def __init__(self, blog):
         self.blog = blog
@@ -111,8 +110,8 @@ class Post(object):
 
     def load(self, filename):
         with open(filename) as f:
-            parts = Post.yaml_sep.split(f.read(), maxsplit=2)
-        header = yaml.load(parts[1])
+            parts = Post.json_sep.split(f.read(), maxsplit=2)
+        header = json.loads(parts[1])
         self.author = header['author']
         self.title = header['title']
         if 'permalink' in header:
