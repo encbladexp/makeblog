@@ -131,7 +131,7 @@ class Post(object):
 
     def render(self):
         template = jinja.get_template('article.html')
-        with open(directorymaker('%s/index.html' % self.permalink.lstrip('%s/' % self.blog.config['blog']['url'])), 'w') as f:
+        with open(directorymaker('%s/index.html' % self.permalink.replace('%s/' % self.blog.config['blog']['url'], '')), 'w') as f:
             f.write(template.render(post=self))
 
     @pygmentify
@@ -234,7 +234,7 @@ class Blog(object):
         for path, directories, files in walk('src/'):
             for filename in files:
                 if filename.endswith('.html'):
-                    fname = '%s/%s' % ( path.lstrip('src/'), filename )
+                    fname = '%s/%s' % ( path.replace('src/',''), filename )
                     with open(directorymaker(fname), 'w') as f:
                         t = jinja.get_template(fname)
                         f.write(t.render())
