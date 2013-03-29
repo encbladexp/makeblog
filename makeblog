@@ -248,13 +248,16 @@ class Blog(object):
             raise SystemExit
         with open(filename, "w") as f:
             f.write("---\n")
-            f.write("categories: %s\n" % ", ".join(self.config['blog']['categories']))
-            f.write("permalink: %s/%s/%s\n" % (self.config['blog']['url'], strftime('%Y/%m/%d'), slugify(options.title)))
-            f.write("guid: %s\n" % str(uuidgen()))
-            f.write("title: %s\n" % options.title)
-            f.write("author: %s\n" % self.config['blog']['defaultauthor'])
-            f.write("date: %s\n" % strftime(self.config['blog']['dateformat']))
-            f.write("---\n")
+            headers = {
+                "categories":"%s" % ", ".join(self.config['blog']['categories']),
+                "permalink:":"%s/%s/%s" % (self.config['blog']['url'], strftime('%Y/%m/%d'), slugify(options.title)),
+                "guid:":"%s" % str(uuidgen()),
+                "title:":"%s" % options.title,
+                "author:":"%s" % self.config['blog']['defaultauthor'],
+                "date:":"%s" % strftime(self.config['blog']['dateformat'])
+            }
+            json.dump(headers,f,indent=1,ensure_ascii=False)
+            f.write("\n---\n")
         print(filename)
 
 def slugify(text, filename=False):
