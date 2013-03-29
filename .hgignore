@@ -2,3 +2,4 @@ glob:
 src/*
 dst/*
 posts/*
+drafts/*
