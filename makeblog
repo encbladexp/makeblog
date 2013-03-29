@@ -310,3 +310,31 @@ elif options.init:
     for directory in ('src','posts','drafts'):
         if not exists(directory):
             makedirs(directory)
+    config = {
+        'blog':{
+            'name':'''My's Blog''',
+            'url':'http://blog.domain.tld',
+            'description':'Because i can!',
+            'googleplus':True,
+            'twitter':True,
+            'categories':['category1', 'category2', 'category4' ],
+            'defaultauthor':'me',
+            'timezone':'Europe/Berlin',
+            'dateformat':'%Y/%m/%d %H:%M:%S'
+        },
+        'authors':{
+            'me':{
+                'name':'Full Name',
+                'nick':'nickname',
+                'googleplus':'http...',
+                'twitter':'http...',
+                'amazon':'http...',
+                'bitcoin':None,
+                'mail':'info@domain.tld'
+            }
+        }
+    }
+    if not access('config.json', F_OK):
+        with open('config.json','w') as f:
+            json.dump(config,f,indent=1,ensure_ascii=False)
+        print("You should edit config.json.")
