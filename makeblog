@@ -173,7 +173,7 @@ class Blog(object):
             startposts.reverse()
             f.write(t.render(posts=startposts))
         # render main feed
-        with open(directorymaker('feed.atom/index.xml'), 'w') as f:
+        with open(directorymaker('feed.atom'), 'w') as f:
             t = jinja.get_template('atom.html')
             feedposts = posts[-10:]
             feedposts.reverse()
@@ -199,7 +199,7 @@ class Blog(object):
             f.write(t.render(categories=categories))
         # render category feeds
         for category in categoryposts.keys():
-            with open(directorymaker('category/%s/feed.atom/index.xml' % category), 'w') as f:
+            with open(directorymaker('category/%s/feed.atom' % category), 'w') as f:
                 t = jinja.get_template('atom.html')
                 feedposts = sorted(categoryposts[category], key=attrgetter('date'))[-10:]
                 feedposts.reverse()
