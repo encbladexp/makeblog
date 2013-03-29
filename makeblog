@@ -250,11 +250,11 @@ class Blog(object):
             f.write("---\n")
             headers = {
                 "categories":"%s" % ", ".join(self.config['blog']['categories']),
-                "permalink:":"%s/%s/%s" % (self.config['blog']['url'], strftime('%Y/%m/%d'), slugify(options.title)),
-                "guid:":"%s" % str(uuidgen()),
-                "title:":"%s" % options.title,
-                "author:":"%s" % self.config['blog']['defaultauthor'],
-                "date:":"%s" % strftime(self.config['blog']['dateformat'])
+                "permalink":"%s/%s/%s" % (self.config['blog']['url'], strftime('%Y/%m/%d'), slugify(options.title)),
+                "guid":"%s" % str(uuidgen()),
+                "title":"%s" % options.title,
+                "author":"%s" % self.config['blog']['defaultauthor'],
+                "date":"%s" % strftime(self.config['blog']['dateformat'])
             }
             json.dump(headers,f,indent=1,ensure_ascii=False)
             f.write("\n---\n")
