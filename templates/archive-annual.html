@@ -1,5 +1,5 @@
 {% extends 'site.html' %}
-{% block title %}{{ blog.name }} - Archiv {{ year }}{% endblock %}
+{% block title %}{{ super() }} - Archiv {{ year }}{% endblock %}
 {% block content %}
 <h1>Archiv {{ year }}</h1>
 <ul>
