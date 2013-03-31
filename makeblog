@@ -28,7 +28,7 @@ from re import compile, escape, MULTILINE, DOTALL
 from sys import argv
 from time import strftime
 from uuid import uuid4 as uuidgen
-from jinja2 import FileSystemLoader, Environment
+from jinja2 import FileSystemLoader, Environment, StrictUndefined
 from http.server import SimpleHTTPRequestHandler
 from socketserver import TCPServer
 import json
@@ -56,7 +56,7 @@ code_re = compile(
     r"(?P<code>.*?)\s\$\$/code"
     , DOTALL)
 
-jinja = Environment(loader=FileSystemLoader(['templates','src']))
+jinja = Environment(loader=FileSystemLoader(['templates','src']),undefined=StrictUndefined)
 
 def pygments_css(formatter):
     with open(directorymaker('css/pygments_fruity.css'), "w") as f:
