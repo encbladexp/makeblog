@@ -4,3 +4,4 @@
 * Draft rendering mode
 * Rendering Cache
 * Render only changed articles, not entire Blog
+* Update Post Metadata
