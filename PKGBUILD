@@ -8,7 +8,7 @@ url="http://bitbucket.org/encbladexp/makeblog"
 license=('GPL3')
 options=(!emptydirs)
 depends=('python-pytz' 'python-jinja' 'python-pygments')
-source=($pkgname-$pkgver.tar.bz2)
+source=(https://bitbucket.org/encbladexp/$pkgname/get/$pkgver.tar.bz2)
 md5sums=('966aae9f2902395237805a79e498e3a3')
 
 package() {
