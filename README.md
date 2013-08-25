@@ -10,6 +10,11 @@ required stuff. Mostly inspired by /dev/null
 * Pygments
 * PyTZ
 
+## Setup
+
+    pip install -r requirements.txt
+    python setup.py install
+
 ## Usage
 
 Create a new Blog:
