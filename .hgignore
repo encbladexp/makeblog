@@ -4,3 +4,4 @@ dst/*
 posts/*
 drafts/*
 config.json
+.nfs*
