@@ -56,7 +56,7 @@ code_re = compile(
     r"(?P<code>.*?)\s\$\$/code"
     , DOTALL)
 
-jinja = Environment(loader=FileSystemLoader(['templates','src']),undefined=StrictUndefined)
+jinja = Environment(loader=FileSystemLoader(['makeblog/templates','src']),undefined=StrictUndefined)
 
 def pygments_css(formatter):
     with open(directorymaker('css/pygments_fruity.css'), "w") as f:
