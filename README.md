@@ -19,16 +19,16 @@ required stuff. Mostly inspired by /dev/null
 
 Create a new Blog:
 
-    ./makeblog -i
+    makeblog-bin -i
 
 Create your first article:
 
-    ./makeblog -t "Your new article"
+    makeblog-bin -t "Your new article"
 
 Build the whole Blog:
 
-    ./makeblog -b
+    makeblog-bin -b
 
 Start the Test Server:
 
-    ./makeblog -s
+    makeblog-bin -s
