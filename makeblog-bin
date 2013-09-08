@@ -14,18 +14,17 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from argparse import ArgumentParser, Namespace
+from makeblog.tools import slugify, newfile, directorymaker, options
 from datetime import datetime
 from operator import attrgetter
 from os import listdir, access, F_OK, makedirs, system, chdir, walk
-from os.path import dirname, exists
+from os.path import exists
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_by_name
 from pygments.util import ClassNotFound
 from pygments import highlight
 from pytz import timezone
 from re import compile, escape, MULTILINE, DOTALL
-from sys import argv
 from time import strftime
 from uuid import uuid4 as uuidgen
 from jinja2 import ChoiceLoader, FileSystemLoader, PackageLoader, Environment, StrictUndefined
@@ -33,21 +32,6 @@ from http.server import SimpleHTTPRequestHandler
 from socketserver import TCPServer
 from urllib.parse import urlparse
 import json
-
-SLUG_ITEMS = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
-               'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-               'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6',
-               '7', '8', '9', '-', ':', '_' ]
-SLUG_REPLACE = { ' ':'-', 'ß':'ss', 'ü':'ue', 'ö':'oe', 'ä':'ae' }
-SLUG_FILENAME_EXCLUDE = [ ':' ]
-
-opts = ArgumentParser(prog='makeblog',description='A simple offline Blog.')
-opts.add_argument('-t', '--title', metavar='TITLE', help='Create a new Article with Title')
-opts.add_argument('-b', '--build', action='store_true', help='Build this Blog')
-opts.add_argument('-s', '--serve', action='store_true', help='Serve this Blog')
-opts.add_argument('-i', '--init', action='store_true', help='Create required directories')
-options = Namespace()
-opts.parse_args(namespace=options)
 
 code_re = compile(
     r"(?:^|\s)"
@@ -261,41 +245,6 @@ class Blog(object):
             json.dump(headers,f,indent=1,ensure_ascii=False)
             f.write("\n---\n")
         print(filename)
-
-def slugify(text, filename=False):
-    """
-    Slugifies a string.
-    """
-    slug = ''
-    lowered = text.lower()
-    if filename:
-        for excludedchar in SLUG_FILENAME_EXCLUDE:
-            lowered = lowered.replace(excludedchar, '')
-    for char in lowered:
-        if char in SLUG_REPLACE:
-            slug = slug + SLUG_REPLACE[char]
-        elif char in SLUG_ITEMS:
-            slug = slug + char
-    return slug
-
-def newfile(slug):
-    """
-    Return a new file object base on slug and next free id in _posts/.
-    """
-    idre = compile("([0-9]*).*")
-    files = sorted([int(idre.match(filename).group(1)) for filename in listdir("posts/") if idre.match(filename)])
-    fileid = 1 if len(files) == 0 else files[-1]+1
-    return "posts/%i-%s.html" % ( fileid, slug )
-
-def directorymaker(path):
-    """
-    Creates directories required for path.
-    """
-    path = 'dst/%s' % path
-    directories = dirname(path)
-    if not exists(directories):
-        makedirs(directories)
-    return path
 
 if options.title:
     b = Blog()
