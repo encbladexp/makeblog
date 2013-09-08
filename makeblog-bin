@@ -279,7 +279,7 @@ elif options.init:
                 'nick':'nickname',
                 'googleplus':'http...',
                 'twitter':'http...',
-                'amazon':'http...',
+                'amazon':None,
                 'bitcoin':None,
                 'mail':'info@domain.tld'
             }

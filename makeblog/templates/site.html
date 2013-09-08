@@ -82,8 +82,22 @@ href="/feed.atom" />
 <div id='donateinfo'>
 <h3 class='caps'>Spenden</h3>
 <div class='box'>
-<a href="http://www.amazon.de/registry/wishlist/1SE52K53P3DE3">Amazon Wunschzettel</a><br />
-<a href="http://bitcoin.org">Bitcoin</a> an: <em>1Pn2cMyWJ9d3gYxkw82T3hnZAHCjGTPxen</em>
+
+{% if post is defined %}
+    {% if blog.config['authors'][post.author]['amazon'] is not none %}
+    <a href="{{ blog.config['authors'][post.author]['amazon'] }}">Amazon Wunschzettel</a><br />
+    {% endif %}
+{% elif blog.config['authors'][blog.config['blog']['defaultauthor']]['amazon'] is not none %}
+    <a href="{{ blog.config['authors'][blog.config['blog']['defaultauthor']]['amazon'] }}">Amazon Wunschzettel</a><br />
+{% endif %}
+
+{% if post is defined %}
+    {% if blog.config['authors'][post.author]['bitcoin'] is not none %}
+    <a href="http://bitcoin.org">Bitcoin</a> an: <em>{{ blog.config['authors'][post.author]['bitcoin'] }}</em>
+    {% endif %}
+{% elif blog.config['authors'][blog.config['blog']['defaultauthor']]['bitcoin'] is not none %}
+    <a href="http://bitcoin.org">Bitcoin</a> an: <em>{{ blog.config['authors'][blog.config['blog']['defaultauthor']]['bitcoin'] }}</em>
+{% endif %}
 </div>
 </div>
 <!-- Ende Spendenbox -->
