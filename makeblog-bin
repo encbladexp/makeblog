@@ -31,6 +31,7 @@ from uuid import uuid4 as uuidgen
 from jinja2 import ChoiceLoader, FileSystemLoader, PackageLoader, Environment, StrictUndefined
 from http.server import SimpleHTTPRequestHandler
 from socketserver import TCPServer
+from urllib.parse import urlparse
 import json
 
 SLUG_ITEMS = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
@@ -141,6 +142,7 @@ class Blog(object):
     def __init__(self):
         with open('config.json','r') as f:
             self.config = json.load(f)
+            self.config['blog']['domain'] = urlparse(self.config['blog']['url']).netloc
 
     def build(self):
         # config
