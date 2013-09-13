@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # makeblog - A simple offline Blog.
 # Copyright (C) 2013 Stefan J. Betz <info@stefan-betz.net>
 
@@ -14,28 +13,19 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from makeblog.tools import options
-from makeblog.blog import Blog
-from makeblog.config import DEFAULT_CONFIG
-from makeblog.server import Server
-from os import access, F_OK, makedirs
-from os.path import exists
-import json
+from os import chdir
+from http.server import SimpleHTTPRequestHandler
+from socketserver import TCPServer
 
-if options.title:
-    b = Blog()
-    b.newpost(options.title)
-elif options.build:
-    b = Blog()
-    b.build()
-elif options.serve:
-    s = Server()
-    s.serve()
-elif options.init:
-    for directory in ('src','posts','drafts'):
-        if not exists(directory):
-            makedirs(directory)
-    if not access('config.json', F_OK):
-        with open('config.json','w') as f:
-            json.dump(DEFAULT_CONFIG,f,indent=1,ensure_ascii=False)
-        print("You should edit config.json.")
+class Server(object):
+    """
+    A Simple testing Server for simple Blogs.
+    """
+
+    def __init__(self):
+        chdir('dst/')
+        self.httpd = TCPServer(('127.0.0.1',8000), SimpleHTTPRequestHandler)
+
+    def serve(self):
+        print("Starting Webserver for http://127.0.0.1:8000/")
+        self.httpd.serve_forever()
