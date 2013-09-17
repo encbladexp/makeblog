@@ -16,6 +16,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from makeblog.tools import options
 from makeblog.blog import Blog
+from makeblog.post import Post
 from makeblog.config import DEFAULT_CONFIG
 from makeblog.server import Server
 from os import access, F_OK, makedirs
@@ -24,7 +25,15 @@ import json
 
 if options.title:
     b = Blog()
-    b.newpost(options.title)
+    p = Post(b)
+    p.new(options.title)
+    p.save()
+elif options.update:
+    b = Blog()
+    p = Post(b)
+    p.load(options.update)
+    p.update()
+    p.save()
 elif options.build:
     b = Blog()
     b.build()

@@ -13,13 +13,15 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from makeblog.tools import slugify, directorymaker
+from makeblog.tools import slugify, directorymaker, newfile
 from makeblog.pygments import pygmentify
 from makeblog.templating import jinja
 from datetime import datetime
 from pytz import timezone
 from re import compile, MULTILINE
+from os import access, F_OK
 from time import strftime
+from uuid import uuid4 as uuidgen
 import json
 
 class Post(object):
@@ -38,9 +40,11 @@ class Post(object):
         self._content = None
         self.next = None
         self.prev = None
+        self.filename = None
 
     def load(self, filename):
-        with open(filename) as f:
+        self.filename = filename
+        with open(self.filename) as f:
             parts = Post.json_sep.split(f.read(), maxsplit=2)
         header = json.loads(parts[1])
         self.author = header['author']
@@ -58,6 +62,46 @@ class Post(object):
         if not self.slug:
             self.slug = slugify(self.title)
         self._content = parts[2]
+
+    def update(self):
+        self.updated = timezone(self.blog.config['blog']['timezone']).localize(datetime.now())
+
+    def new(self, title):
+        """
+        Create a new Post…
+        """
+        self.title = title
+        self.filename = newfile(slugify(self.title))
+        if access(self.filename, F_OK):
+            print("Sorry, file already exists, but why?")
+            raise SystemExit
+        self.guid = str(uuidgen())
+        self.author = self.blog.config['blog']['defaultauthor']
+        self.categories = self.blog.config['blog']['categories']
+        self.updated = self.date
+        self.permalink = '%s/%s/%s' % (self.blog.config['blog']['url'], self.date.strftime('%Y/%m/%d'), slugify(self.title))
+        self.save()
+        print(self.filename)
+
+    def save(self):
+        with open(self.filename, "w") as f:
+            f.write("---\n")
+            headers = {
+                "categories":"%s" % ", ".join(self.categories),
+                "permalink":self.permalink,
+                "guid":self.guid,
+                "title":self.title,
+                "author":self.author,
+                "date":"%s" % self.date.strftime(self.blog.config['blog']['dateformat']),
+            }
+            if self.updated is not self.date:
+                headers["updated"] = self.updated.strftime(self.blog.config['blog']['dateformat'])
+            json.dump(headers,f,indent=1,ensure_ascii=False)
+            f.write("\n---")
+            if self._content:
+                f.write(self._content)
+            else:
+                f.write("\n")
 
     def render(self):
         template = jinja.get_template('article.html')

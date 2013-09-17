@@ -13,14 +13,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from makeblog.tools import slugify, newfile, directorymaker, options
+from makeblog.tools import directorymaker
 from makeblog.post import Post
 from makeblog.templating import jinja
 from datetime import datetime
 from operator import attrgetter
-from os import listdir, access, F_OK, system, walk
+from os import listdir, system, walk
 from time import strftime
-from uuid import uuid4 as uuidgen
 from urllib.parse import urlparse
 import json
 
@@ -125,25 +124,3 @@ class Blog(object):
                     with open(directorymaker(fname), 'w') as f:
                         t = jinja.get_template(fname)
                         f.write(t.render())
-    
-    def newpost(self, title):
-        """
-        Create a new Post…
-        """
-        filename = newfile(slugify(title))
-        if access(filename, F_OK):
-            print("Sorry, file already exists, but why?")
-            raise SystemExit
-        with open(filename, "w") as f:
-            f.write("---\n")
-            headers = {
-                "categories":"%s" % ", ".join(self.config['blog']['categories']),
-                "permalink":"%s/%s/%s" % (self.config['blog']['url'], strftime('%Y/%m/%d'), slugify(options.title)),
-                "guid":"%s" % str(uuidgen()),
-                "title":"%s" % options.title,
-                "author":"%s" % self.config['blog']['defaultauthor'],
-                "date":"%s" % strftime(self.config['blog']['dateformat'])
-            }
-            json.dump(headers,f,indent=1,ensure_ascii=False)
-            f.write("\n---\n")
-        print(filename)

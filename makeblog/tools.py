@@ -66,5 +66,6 @@ opts.add_argument('-t', '--title', metavar='TITLE', help='Create a new Article w
 opts.add_argument('-b', '--build', action='store_true', help='Build this Blog')
 opts.add_argument('-s', '--serve', action='store_true', help='Serve this Blog')
 opts.add_argument('-i', '--init', action='store_true', help='Create required directories')
+opts.add_argument('-u', '--update', metavar='FILENAME', help='Update Timestamp from Blog file')
 options = Namespace()
 opts.parse_args(namespace=options)
