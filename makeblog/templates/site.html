@@ -70,13 +70,19 @@ href="/feed.atom" />
 </div>
 <!-- Ende Navigationsbox -->
 <!-- Authorbox -->	
+{% if post is defined %}
 <div id='authorinfo'>
 <h3 class='caps'>Autor</h3>
 <div class='box'>
-<a href="https://plus.google.com/103105755986251553871?rel=author" rel="publisher"><img src='/gplus.png' alt='Google+' /></a>
-<a href="https://twitter.com/encbladexp"><img src='/twitter.png' alt='Twitter' /></a>
+{% if blog.config['authors'][post.author]['googleplus'] is not none %}
+<a href="{{ blog.config['authors'][post.author]['googleplus'] }}" rel="publisher"><img src='/gplus.png' alt='Google+' /></a>
+{% endif %}
+{% if blog.config['authors'][post.author]['twitter'] is not none %}
+<a href="{{ blog.config['authors'][post.author]['twitter'] }}"><img src='/twitter.png' alt='Twitter' /></a>
+{% endif %}
 </div>
 </div>
+{% endif %}
 <!-- Ende Authorbox -->
 <!-- Spendenbox -->	
 <div id='donateinfo'>
