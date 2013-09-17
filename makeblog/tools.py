@@ -44,12 +44,14 @@ def slugify(text, filename=False):
 
 def newfile(slug):
     """
-    Return a new file object base on slug and next free id in _posts/.
+    Return a new file object base on slug and next free id in posts/ or drafts/.
     """
     idre = compile("([0-9]*).*")
-    files = sorted([int(idre.match(filename).group(1)) for filename in listdir("posts/") if idre.match(filename)])
+    dirs = listdir('posts') + listdir('drafts')
+    files = sorted([int(idre.match(filename).group(1)) for filename in dirs if idre.match(filename)])
     fileid = 1 if len(files) == 0 else files[-1]+1
-    return "posts/%i-%s.html" % ( fileid, slug )
+    articletype = 'drafts' if options.draft else 'posts'
+    return "%s/%i-%s.html" % ( articletype, fileid, slug )
 
 def directorymaker(path):
     """
@@ -63,6 +65,7 @@ def directorymaker(path):
 
 opts = ArgumentParser(prog='makeblog',description='A simple offline Blog.')
 opts.add_argument('-t', '--title', metavar='TITLE', help='Create a new Article with Title')
+opts.add_argument('-d', '--draft', action='store_true', help='Draft mode for --build and --title')
 opts.add_argument('-b', '--build', action='store_true', help='Build this Blog')
 opts.add_argument('-s', '--serve', action='store_true', help='Serve this Blog')
 opts.add_argument('-i', '--init', action='store_true', help='Create required directories')

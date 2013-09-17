@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from makeblog.tools import directorymaker
+from makeblog.tools import directorymaker, options
 from makeblog.post import Post
 from makeblog.templating import jinja
 from datetime import datetime
@@ -39,6 +39,11 @@ class Blog(object):
             p = Post(self)
             p.load('posts/%s' % filename)
             unsortedposts.append(p)
+        if options.draft:
+            for filename in listdir('drafts'):
+                p = Post(self)
+                p.load('drafts/%s' % filename)
+                unsortedposts.append(p)
         # sort posts by date
         posts = sorted(unsortedposts, key=attrgetter('date'))
         # link next/prev posts
