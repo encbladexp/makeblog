@@ -14,7 +14,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from makeblog.tools import options
+from makeblog.tools import options, parse_args
 from makeblog.blog import Blog
 from makeblog.post import Post
 from makeblog.config import DEFAULT_CONFIG
@@ -23,6 +23,7 @@ from os import access, F_OK, makedirs
 from os.path import exists
 import json
 
+parse_args()
 if options.title:
     b = Blog()
     p = Post(b)

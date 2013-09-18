@@ -26,6 +26,15 @@ SLUG_ITEMS = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
 SLUG_REPLACE = { ' ':'-', 'ß':'ss', 'ü':'ue', 'ö':'oe', 'ä':'ae' }
 SLUG_FILENAME_EXCLUDE = [ ':' ]
 
+opts = ArgumentParser(prog='makeblog',description='A simple offline Blog.')
+opts.add_argument('-t', '--title', metavar='TITLE', help='Create a new Article with Title')
+opts.add_argument('-d', '--draft', action='store_true', help='Draft mode for --build and --title')
+opts.add_argument('-b', '--build', action='store_true', help='Build this Blog')
+opts.add_argument('-s', '--serve', action='store_true', help='Serve this Blog')
+opts.add_argument('-i', '--init', action='store_true', help='Create required directories')
+opts.add_argument('-u', '--update', metavar='FILENAME', help='Update Timestamp from Blog file')
+options = Namespace()
+
 def slugify(text, filename=False):
     """
     Slugifies a string.
@@ -63,12 +72,5 @@ def directorymaker(path):
         makedirs(directories)
     return path
 
-opts = ArgumentParser(prog='makeblog',description='A simple offline Blog.')
-opts.add_argument('-t', '--title', metavar='TITLE', help='Create a new Article with Title')
-opts.add_argument('-d', '--draft', action='store_true', help='Draft mode for --build and --title')
-opts.add_argument('-b', '--build', action='store_true', help='Build this Blog')
-opts.add_argument('-s', '--serve', action='store_true', help='Serve this Blog')
-opts.add_argument('-i', '--init', action='store_true', help='Create required directories')
-opts.add_argument('-u', '--update', metavar='FILENAME', help='Update Timestamp from Blog file')
-options = Namespace()
-opts.parse_args(namespace=options)
+def parse_args():
+    opts.parse_args(namespace=options)
