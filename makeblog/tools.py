@@ -24,7 +24,7 @@ SLUG_ITEMS = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
                'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6',
                '7', '8', '9', '-', ':', '_' ]
 SLUG_REPLACE = { ' ':'-', 'ß':'ss', 'ü':'ue', 'ö':'oe', 'ä':'ae' }
-SLUG_FILENAME_EXCLUDE = [ ':' ]
+SLUG_EXCLUDE = [ ':' ]
 
 opts = ArgumentParser(prog='makeblog',description='A simple offline Blog.')
 opts.add_argument('-t', '--title', metavar='TITLE', help='Create a new Article with Title')
@@ -35,15 +35,14 @@ opts.add_argument('-i', '--init', action='store_true', help='Create required dir
 opts.add_argument('-u', '--update', metavar='FILENAME', help='Update Timestamp from Blog file')
 options = Namespace()
 
-def slugify(text, filename=False):
+def slugify(text):
     """
     Slugifies a string.
     """
     slug = ''
     lowered = text.lower()
-    if filename:
-        for excludedchar in SLUG_FILENAME_EXCLUDE:
-            lowered = lowered.replace(excludedchar, '')
+    for excludedchar in SLUG_EXCLUDE:
+        lowered = lowered.replace(excludedchar, '')
     for char in lowered:
         if char in SLUG_REPLACE:
             slug = slug + SLUG_REPLACE[char]

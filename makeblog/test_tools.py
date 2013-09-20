@@ -30,6 +30,5 @@ class TestSlugify(TestCase):
     def test_whitespace(self):
         self.assertEqual(slugify(" "),"-")
 
-    def test_filename_exclude(self):
-        self.assertEqual(slugify(":",True),"")
-        self.assertNotEqual(slugify(":",False),"")
+    def test_slug_exclude(self):
+        self.assertEqual(slugify(":"),"")
