@@ -59,7 +59,7 @@ class Post(object):
             self.updated = timezone(self.blog.config['blog']['timezone']).localize(datetime.strptime(header['updated'], self.blog.config['blog']['dateformat']))
         if not self.permalink:
             self.permalink = '%s/%s/%s' % (self.blog.config['blog']['url'], self.date.strftime('%Y/%m/%d'), slugify(self.title))
-        self.slug = headers['slug'] if 'slug' in headers else slugify(self.title)
+        self.slug = header['slug'] if 'slug' in header else slugify(self.title)
         self._content = parts[2]
 
     def update(self):
