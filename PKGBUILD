@@ -9,9 +9,9 @@ license=('GPL3')
 options=(!emptydirs)
 depends=('python-pytz' 'python-jinja' 'python-pygments')
 source=(https://bitbucket.org/encbladexp/$pkgname/get/$pkgver.tar.bz2)
-md5sums=('966aae9f2902395237805a79e498e3a3')
+md5sums=('d0c3dba64d9e448c8a47f3c194d28257')
 
 package() {
-	cd "$srcdir/$pkgname-$pkgver"
+	cd "$srcdir/encbladexp-$pkgname-98d250941c28"
 	python setup.py install --root="$pkgdir/" --optimize=1
 }
