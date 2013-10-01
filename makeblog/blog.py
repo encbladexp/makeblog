@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from makeblog.tools import directorymaker, options
 from makeblog.post import Post
-from makeblog.templating import jinja
+from makeblog.templating import jinja, render
 from datetime import datetime
 from operator import attrgetter
 from os import listdir, system, walk
@@ -59,17 +59,13 @@ class Blog(object):
         for post in posts:
             post.render()
         # render index page
-        with open(directorymaker('index.html'), 'w') as f:
-            t = jinja.get_template('chronological.html')
-            startposts = posts[-5:]
-            startposts.reverse()
-            f.write(t.render(posts=startposts))
+        startposts = posts[-5:]
+        startposts.reverse()
+        render('chronological.html','index.html',posts=startposts)
         # render main feed
-        with open(directorymaker('feed.atom'), 'w') as f:
-            t = jinja.get_template('atom.html')
-            feedposts = posts[-10:]
-            feedposts.reverse()
-            f.write(t.render(posts=feedposts))
+        feedposts = posts[-10:]
+        feedposts.reverse()
+        render('atom.html','feed.atom',posts=feedposts)
         # render category pages
         categoryposts = {}
         for post in posts:
@@ -78,24 +74,18 @@ class Blog(object):
                     categoryposts[category] = []
                 categoryposts[category].append(post)
         for category in categoryposts.keys():
-            with open(directorymaker('category/%s/index.html'% category), 'w') as f:
-                t = jinja.get_template('category.html')
-                thisposts = sorted(categoryposts[category], key=attrgetter('date'))
-                thisposts.reverse()
-                f.write(t.render(category=category, posts=thisposts))
+            thisposts = sorted(categoryposts[category], key=attrgetter('date'))
+            thisposts.reverse()
+            render('category.html','category/%s/index.html' % category,category=category, posts=thisposts)
         # render category index
-        with open(directorymaker('category/index.html'), 'w') as f:
-            t = jinja.get_template('categories.html')
-            categories = list(categoryposts.keys())
-            categories.sort()
-            f.write(t.render(categories=categories))
+        categories = list(categoryposts.keys())
+        categories.sort()
+        render('categories.html','category/index.html',categories=categories)
         # render category feeds
         for category in categoryposts.keys():
-            with open(directorymaker('category/%s/feed.atom' % category), 'w') as f:
-                t = jinja.get_template('atom.html')
-                feedposts = sorted(categoryposts[category], key=attrgetter('date'))[-10:]
-                feedposts.reverse()
-                f.write(t.render(posts=feedposts))
+            feedposts = sorted(categoryposts[category], key=attrgetter('date'))[-10:]
+            feedposts.reverse()
+            render('atom.html','category/%s/feed.atom' % category,posts=feedposts)
         # render archive pages
         timeposts = {}
         for post in posts:
@@ -106,26 +96,18 @@ class Blog(object):
             timeposts[post.date.year][post.date.month].append(post)
         for year in timeposts.keys():
             for month in timeposts[year].keys():
-                with open(directorymaker('archive/%s/%s/index.html' % ( year, month )), 'w') as f:
-                    t = jinja.get_template('archive-posts.html')
-                    archiveposts = sorted(timeposts[year][month], key=attrgetter('date'))
-                    archiveposts.reverse()
-                    f.write(t.render(year=year, month=month, posts=archiveposts))
-            with open(directorymaker('archive/%s/index.html' % year), 'w') as f:
-                t = jinja.get_template('archive-annual.html')
-                months = list(timeposts[year].keys())
-                months.sort()
-                f.write(t.render(months=months, year=year, yearposts=timeposts[year]))
-        with open(directorymaker('archive/index.html'), 'w') as f:
-            t = jinja.get_template('archive.html')
-            years = list(timeposts.keys())
-            years.sort()
-            f.write(t.render(years=years))
+                archiveposts = sorted(timeposts[year][month], key=attrgetter('date'))
+                archiveposts.reverse()
+                render('archive-posts.html','archive/%s/%s/index.html' % ( year, month ),year=year, month=month, posts=archiveposts)
+            months = list(timeposts[year].keys())
+            months.sort()
+            render('archive-annual.html','archive/%s/index.html' % year,months=months, year=year, yearposts=timeposts[year])
+        years = list(timeposts.keys())
+        years.sort()
+        render('archive.html','archive/index.html',years=years)
         # static page rendering
         for path, directories, files in walk('src/'):
             for filename in files:
                 if filename.endswith('.html'):
                     fname = '%s/%s' % ( path.replace('src/',''), filename )
-                    with open(directorymaker(fname), 'w') as f:
-                        t = jinja.get_template(fname)
-                        f.write(t.render())
+                    render(fname,fname)
