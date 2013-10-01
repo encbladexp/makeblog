@@ -1,3 +1,4 @@
-glob:
+syntax: glob
 build/*
 .nfs*
+*.pyc
