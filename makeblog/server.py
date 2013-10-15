@@ -28,4 +28,7 @@ class Server(object):
 
     def serve(self):
         print("Starting Webserver for http://127.0.0.1:8000/")
-        self.httpd.serve_forever()
+        try:
+            self.httpd.serve_forever()
+        except KeyboardInterrupt:
+            raise SystemExit
