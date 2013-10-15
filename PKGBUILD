@@ -1,6 +1,6 @@
 # Maintainer: Stefan J. Betz <info@stefan-betz.net>
 pkgname=makeblog
-pkgver=0.0.2
+pkgver=0.0.3
 pkgrel=1
 pkgdesc="A simple offline Blog."
 arch=(any)
