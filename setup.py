@@ -18,7 +18,7 @@
 from distutils.core import setup
 
 setup(name='makeblog',
-      version='0.0.2',
+      version='0.0.3',
       description='A simple offline Blog.',
       author='Stefan J. Betz',
       author_email='info@stefan-betz.net',
