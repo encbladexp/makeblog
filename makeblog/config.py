@@ -30,11 +30,11 @@ DEFAULT_CONFIG = {
         'me':{
             'name':'Full Name',
             'nick':'nickname',
-            'googleplus':'http...',
-            'twitter':'http...',
+            'googleplus':None,
+            'twitter':None,
             'amazon':None,
             'bitcoin':None,
-            'mail':'info@domain.tld'
+            'mail':None
         }
     }
 }
