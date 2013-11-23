@@ -16,6 +16,7 @@
 from os import chdir
 from http.server import SimpleHTTPRequestHandler
 from socketserver import TCPServer
+from sys import exit
 
 
 class TCPServerReusable(TCPServer):
@@ -36,4 +37,4 @@ class Server(object):
         try:
             self.httpd.serve_forever()
         except KeyboardInterrupt:
-            raise SystemExit
+            exit()
