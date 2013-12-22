@@ -40,4 +40,6 @@ class TestDirectorymaker(TestCase):
         self.assertEqual(directorymaker("test"),"dst/test")
         self.assertTrue(access("dst",F_OK))
         self.assertFalse(access("dst/test",F_OK))
+
+    def teadDown():
         rmdir("dst")
