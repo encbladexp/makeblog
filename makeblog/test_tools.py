@@ -14,7 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from unittest import TestCase
-from makeblog.tools import slugify
+from os import access, rmdir, F_OK
+from makeblog.tools import slugify, directorymaker
 
 class TestSlugify(TestCase):
 
@@ -32,3 +33,11 @@ class TestSlugify(TestCase):
 
     def test_slug_exclude(self):
         self.assertEqual(slugify(":"),"")
+
+class TestDirectorymaker(TestCase):
+
+    def test_simpledir(self):
+        self.assertEqual(directorymaker("test"),"dst/test")
+        self.assertTrue(access("dst",F_OK))
+        self.assertFalse(access("dst/test",F_OK))
+        rmdir("dst")
