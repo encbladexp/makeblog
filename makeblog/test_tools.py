@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from unittest import TestCase
-from os import access, rmdir, F_OK
-from makeblog.tools import slugify, directorymaker
+from os import access, rmdir, mkdir, unlink, F_OK
+from makeblog.tools import slugify, directorymaker, newfile, options, parse_args
 
 class TestSlugify(TestCase):
 
@@ -41,5 +41,23 @@ class TestDirectorymaker(TestCase):
         self.assertTrue(access("dst",F_OK))
         self.assertFalse(access("dst/test",F_OK))
 
-    def teadDown():
+    def tearDown(self):
         rmdir("dst")
+
+class TestNewfile(TestCase):
+    
+    def setUp(self):
+        mkdir('posts')
+        mkdir('drafts')
+        parse_args()
+
+    def test_newfile(self):
+        self.assertEqual(newfile('test'),'posts/1-test.html')
+        with open('posts/1-test.html','w') as f:
+            f.write('test')
+        self.assertEqual(newfile('test'),'posts/2-test.html')
+
+    def tearDown(self):
+        unlink('posts/1-test.html')
+        rmdir('posts')
+        rmdir('drafts')
