@@ -20,14 +20,10 @@ from datetime import datetime
 from operator import attrgetter
 from os import listdir, system, walk
 from time import strftime
-from urllib.parse import urlparse
-import json
 
 class Blog(object):
-    def __init__(self):
-        with open('config.json','r') as f:
-            self.config = json.load(f)
-            self.config['blog']['domain'] = urlparse(self.config['blog']['url']).netloc
+    def __init__(self, config):
+        self.config = config
 
     def build(self):
         # config

@@ -17,35 +17,35 @@
 from makeblog.tools import options, parse_args
 from makeblog.blog import Blog
 from makeblog.post import Post
-from makeblog.config import DEFAULT_CONFIG
+from makeblog.config import readconfig, writedefaultconfig
 from makeblog.server import Server
-from os import access, F_OK, makedirs
-from os.path import exists
+from sys import exit
 import json
 
 parse_args()
+config = readconfig()
+
+# Verify configuration exists and --init is not passed:
+if not config and not options.init:
+    exit('Sorry, no configuration file found.')
+
 if options.title:
-    b = Blog()
+    b = Blog(config)
     p = Post(b)
     p.new(options.title)
     p.save()
 elif options.update:
-    b = Blog()
+    b = Blog(config)
     p = Post(b)
     p.load(options.update)
     p.update()
     p.save()
 elif options.build:
-    b = Blog()
+    b = Blog(config)
     b.build()
 elif options.serve:
     s = Server()
     s.serve()
 elif options.init:
-    for directory in ('src','posts','drafts'):
-        if not exists(directory):
-            makedirs(directory)
-    if not access('config.json', F_OK):
-        with open('config.json','w') as f:
-            json.dump(DEFAULT_CONFIG,f,indent=1,ensure_ascii=False)
+    if not writedefaultconfig():
         print("You should edit config.json.")

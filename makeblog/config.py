@@ -14,6 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+from os import access, F_OK, makedirs
+from os.path import exists
+from urllib.parse import urlparse
+import json
+
 DEFAULT_CONFIG = {
     'blog':{
         'name':'''My's Blog''',
@@ -38,3 +43,28 @@ DEFAULT_CONFIG = {
         }
     }
 }
+
+def readconfig():
+    """
+    Load the configuration, to create a reliable loading of config.json
+    on startup.
+    """
+    if not access('config.json',F_OK):
+        return False
+    with open('config.json','r') as f:
+        config = json.load(f)
+        config['blog']['domain'] = urlparse(config['blog']['url']).netloc
+    return config
+
+def writedefaultconfig():
+    """
+    Create a configuration with sane defaults.
+    """
+    for directory in ('src','posts','drafts'):
+        if not exists(directory):
+            makedirs(directory)
+    if not access('config.json', F_OK):
+        with open('config.json','w') as f:
+            json.dump(DEFAULT_CONFIG,f,indent=1,ensure_ascii=False)
+        return False
+    return True
