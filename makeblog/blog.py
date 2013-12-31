@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from makeblog.tools import directorymaker, options
+from makeblog.tools import directorymaker
 from makeblog.post import Post
 from makeblog.templating import jinja, render
 from datetime import datetime
@@ -25,7 +25,7 @@ class Blog(object):
     def __init__(self, config):
         self.config = config
 
-    def build(self):
+    def build(self, draft=False):
         # config
         jinja.globals['blog'] = self
         jinja.globals['now'] = datetime.utcnow()
@@ -35,7 +35,7 @@ class Blog(object):
             p = Post(self)
             p.load('posts/%s' % filename)
             unsortedposts.append(p)
-        if options.draft:
+        if draft:
             for filename in listdir('drafts'):
                 p = Post(self)
                 p.load('drafts/%s' % filename)

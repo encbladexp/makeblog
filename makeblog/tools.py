@@ -50,7 +50,7 @@ def slugify(text):
             slug = slug + char
     return slug
 
-def newfile(slug):
+def newfile(slug, draft=False):
     """
     Return a new file object base on slug and next free id in posts/ or drafts/.
     """
@@ -58,7 +58,7 @@ def newfile(slug):
     dirs = listdir('posts') + listdir('drafts')
     files = sorted([int(idre.match(filename).group(1)) for filename in dirs if idre.match(filename)])
     fileid = 1 if len(files) == 0 else files[-1]+1
-    articletype = 'drafts' if options.draft else 'posts'
+    articletype = 'drafts' if draft else 'posts'
     return "%s/%i-%s.html" % ( articletype, fileid, slug )
 
 def directorymaker(path):

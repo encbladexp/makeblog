@@ -57,7 +57,13 @@ class TestNewfile(TestCase):
             f.write('test')
         self.assertEqual(newfile('test'),'posts/2-test.html')
 
+    def test_draft(self):
+        self.assertEqual(newfile('test',True),'drafts/1-test.html')
+
     def tearDown(self):
-        unlink('posts/1-test.html')
+        if access('posts/1-test.html',F_OK):
+            unlink('posts/1-test.html')
+        if access('drafts/1-test.html',F_OK):
+            unlink('drafts/1-test.html')
         rmdir('posts')
         rmdir('drafts')

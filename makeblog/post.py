@@ -66,12 +66,12 @@ class Post(object):
     def update(self):
         self.updated = timezone(self.blog.config['blog']['timezone']).localize(datetime.now())
 
-    def new(self, title):
+    def new(self, title, draft=False):
         """
         Create a new Post…
         """
         self.title = title
-        self.filename = newfile(slugify(self.title))
+        self.filename = newfile(slugify(self.title),draft)
         if access(self.filename, F_OK):
             exit("Sorry, file already exists, but why?")
         self.guid = str(uuidgen())

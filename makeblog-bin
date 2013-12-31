@@ -32,7 +32,7 @@ if not config and not options.init:
 if options.title:
     b = Blog(config)
     p = Post(b)
-    p.new(options.title)
+    p.new(options.title, options.draft)
     p.save()
 elif options.update:
     b = Blog(config)
@@ -42,7 +42,7 @@ elif options.update:
     p.save()
 elif options.build:
     b = Blog(config)
-    b.build()
+    b.build(options.draft)
 elif options.serve:
     s = Server()
     s.serve()
