@@ -4,12 +4,12 @@ pkgver=0.0.3
 pkgrel=1
 pkgdesc="A simple offline Blog."
 arch=(any)
-url="http://bitbucket.org/encbladexp/makeblog"
+url="https://github.com/encbladexp/makeblog"
 license=('GPL3')
 options=(!emptydirs)
 depends=('python-pytz' 'python-jinja' 'python-pygments')
 makedepends=('mercurial')
-source=('makeblog::hg+http://bitbucket.org/encbladexp/makeblog#tag='$pkgver)
+source=('makeblog::git://github.com/encbladexp/makeblog#tag='$pkgver)
 md5sums=('SKIP')
 
 package() {
