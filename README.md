@@ -5,8 +5,8 @@ required stuff. Mostly inspired by /dev/null
 
 ## Requirements
 
-* Python 3
-* Jinja 2
+* Python >= 3.3
+* Jinja 2 >= 2.7
 * Pygments
 * PyTZ
 
