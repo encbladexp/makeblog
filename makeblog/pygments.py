@@ -26,12 +26,13 @@ code_re = compile(
     r"\$\$code"
     r"(?P<args>\([^\r\n]*\))?"
     r"[^\r\n]*\r?\n"
-    r"(?P<code>.*?)\s\$\$/code"
-    , DOTALL)
+    r"(?P<code>.*?)\s\$\$/code", DOTALL)
+
 
 def pygments_css(formatter):
     with open(directorymaker('css/pygments_fruity.css'), "w") as f:
         f.write(formatter.get_style_defs('.pygments_fruity'))
+
 
 def highlight_code(code, language, formatter):
     try:
@@ -40,6 +41,7 @@ def highlight_code(code, language, formatter):
         lexer = get_lexer_by_name("text")
     highlighted = "\n\n{0}\n\n".format(highlight(code, lexer, formatter))
     return highlighted
+
 
 def pygmentify(func):
     def decorator(self):
@@ -51,9 +53,11 @@ def pygmentify(func):
             if args:
                 if 'lang' in args:
                     lang = args.strip('(').strip(')').split('=')[1]
-            formatter = HtmlFormatter(cssclass='pygments_fruity', style='fruity')
+            formatter = HtmlFormatter(cssclass='pygments_fruity',
+                                      style='fruity')
             pygments_css(formatter)
-            substitutions[match.group()] = highlight_code(match.group('code'), lang, formatter)
+            substitutions[match.group()] = highlight_code(match.group('code'),
+                                                          lang, formatter)
         if len(substitutions) > 0:
             p = compile('|'.join(map(escape, substitutions)))
             post = p.sub(lambda x: substitutions[x.group(0)], post)

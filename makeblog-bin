@@ -20,7 +20,6 @@ from makeblog.post import Post
 from makeblog.config import readconfig, writedefaultconfig
 from makeblog.server import Server
 from sys import exit
-import json
 
 parse_args()
 config = readconfig()

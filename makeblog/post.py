@@ -21,9 +21,9 @@ from pytz import timezone
 from re import compile, MULTILINE
 from os import access, F_OK
 from sys import exit
-from time import strftime
 from uuid import uuid4 as uuidgen
 import json
+
 
 class Post(object):
     json_sep = compile("^---$", MULTILINE)
@@ -36,7 +36,8 @@ class Post(object):
         self.slug = None
         self.guid = None
         self.categories = []
-        self.date = timezone(self.blog.config['blog']['timezone']).localize(datetime.now())
+        self.date = timezone(self.blog.config['blog']['timezone']).\
+            localize(datetime.now())
         self.updated = None
         self._content = None
         self.next = None
@@ -53,32 +54,43 @@ class Post(object):
         if 'permalink' in header:
             self.permalink = header['permalink']
         self.guid = header['guid']
-        self.categories = [category.strip() for category in header['categories'].split(',')]
-        self.date = timezone(self.blog.config['blog']['timezone']).localize(datetime.strptime(header['date'], self.blog.config['blog']['dateformat']))
+        self.categories = [category.strip() for category in
+                           header['categories'].split(',')]
+        self.date = timezone(self.blog.config['blog']['timezone']).\
+            localize(datetime.strptime(header['date'],
+                                       self.blog.config['blog']['dateformat']))
         self.updated = self.date
         if 'updated' in header:
-            self.updated = timezone(self.blog.config['blog']['timezone']).localize(datetime.strptime(header['updated'], self.blog.config['blog']['dateformat']))
+            self.updated = timezone(self.blog.config['blog']['timezone']).\
+                localize(
+                    datetime.strptime(header['updated'],
+                                      self.blog.config['blog']['dateformat']))
         if not self.permalink:
-            self.permalink = '%s/%s/%s' % (self.blog.config['blog']['url'], self.date.strftime('%Y/%m/%d'), slugify(self.title))
+            self.permalink = '%s/%s/%s' % (self.blog.config['blog']['url'],
+                                           self.date.strftime('%Y/%m/%d'),
+                                           slugify(self.title))
         self.slug = header['slug'] if 'slug' in header else slugify(self.title)
         self._content = parts[2]
 
     def update(self):
-        self.updated = timezone(self.blog.config['blog']['timezone']).localize(datetime.now())
+        self.updated = timezone(self.blog.config['blog']['timezone']).\
+            localize(datetime.now())
 
     def new(self, title, draft=False):
         """
         Create a new Post…
         """
         self.title = title
-        self.filename = newfile(slugify(self.title),draft)
+        self.filename = newfile(slugify(self.title), draft)
         if access(self.filename, F_OK):
             exit("Sorry, file already exists, but why?")
         self.guid = str(uuidgen())
         self.author = self.blog.config['blog']['defaultauthor']
         self.categories = self.blog.config['blog']['categories']
         self.updated = self.date
-        self.permalink = '%s/%s/%s' % (self.blog.config['blog']['url'], self.date.strftime('%Y/%m/%d'), slugify(self.title))
+        self.permalink = '%s/%s/%s' % (self.blog.config['blog']['url'],
+                                       self.date.strftime('%Y/%m/%d'),
+                                       slugify(self.title))
         self.save()
         print(self.filename)
 
@@ -86,16 +98,18 @@ class Post(object):
         with open(self.filename, "w") as f:
             f.write("---\n")
             headers = {
-                "categories":"%s" % ", ".join(self.categories),
-                "permalink":self.permalink,
-                "guid":self.guid,
-                "title":self.title,
-                "author":self.author,
-                "date":"%s" % self.date.strftime(self.blog.config['blog']['dateformat']),
+                "categories": "%s" % ", ".join(self.categories),
+                "permalink": self.permalink,
+                "guid": self.guid,
+                "title": self.title,
+                "author": self.author,
+                "date": "%s" % self.date.strftime(
+                    self.blog.config['blog']['dateformat']),
             }
             if self.updated is not self.date:
-                headers["updated"] = self.updated.strftime(self.blog.config['blog']['dateformat'])
-            json.dump(headers,f,indent=1,ensure_ascii=False)
+                headers["updated"] = self.updated.strftime(
+                    self.blog.config['blog']['dateformat'])
+            json.dump(headers, f, indent=1, ensure_ascii=False)
             f.write("\n---")
             if self._content:
                 f.write(self._content)
@@ -104,7 +118,9 @@ class Post(object):
 
     def render(self):
         template = jinja.get_template('article.html')
-        with open(directorymaker('%s/index.html' % self.permalink.replace('%s/' % self.blog.config['blog']['url'], '')), 'w') as f:
+        blogurl = self.blog.config['blog']['url']
+        dirname = self.permalink.replace('%s/' % blogurl, '')
+        with open(directorymaker('%s/index.html' % dirname), 'w') as f:
             f.write(template.render(post=self))
 
     @pygmentify

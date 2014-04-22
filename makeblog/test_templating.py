@@ -19,6 +19,7 @@ from jinja2 import Environment
 from jinja2.exceptions import UndefinedError
 from makeblog.templating import jinja, render
 
+
 class TestTemplating(TestCase):
 
     def setUp(self):
@@ -28,8 +29,8 @@ class TestTemplating(TestCase):
         self.assertIsInstance(jinja, Environment)
 
     def test_render(self):
-        self.assertRaises(UndefinedError, render, 'site.html','test.html')
-        self.assertTrue(access('dst/test.html',F_OK))
+        self.assertRaises(UndefinedError, render, 'site.html', 'test.html')
+        self.assertTrue(access('dst/test.html', F_OK))
 
     def tearDown(self):
         try:

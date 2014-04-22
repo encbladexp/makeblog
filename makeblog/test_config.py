@@ -17,6 +17,7 @@ from unittest import TestCase
 from os import access, F_OK, unlink, rmdir
 from makeblog.config import readconfig, writedefaultconfig
 
+
 class TestWritedefaultconfig(TestCase):
 
     def test_firstrun(self):
@@ -25,31 +26,32 @@ class TestWritedefaultconfig(TestCase):
         first run. After that False is returned.
         """
         self.assertFalse(writedefaultconfig())
-        self.assertTrue(access('src',F_OK))
-        self.assertTrue(access('posts',F_OK))
-        self.assertTrue(access('drafts',F_OK))
-        self.assertTrue(access('config.json',F_OK))
-    
+        self.assertTrue(access('src', F_OK))
+        self.assertTrue(access('posts', F_OK))
+        self.assertTrue(access('drafts', F_OK))
+        self.assertTrue(access('config.json', F_OK))
+
     def test_secondrun(self):
         """
         writedefaultconfig() returns True in case a config.json already exists.
         """
         writedefaultconfig()
         self.assertTrue(writedefaultconfig())
-    
+
     def tearDown(self):
         unlink('config.json')
-        for directory in ('src','posts','drafts'):
+        for directory in ('src', 'posts', 'drafts'):
             rmdir(directory)
 
+
 class TestReadconfig(TestCase):
-    
+
     def test_readconfig(self):
         self.assertFalse(readconfig())
         writedefaultconfig()
         self.assertTrue(readconfig())
-        self.assertIsInstance(readconfig(),dict)
+        self.assertIsInstance(readconfig(), dict)
 
     def tearDown(self):
-        if access('config.json',F_OK):
+        if access('config.json', F_OK):
             unlink('config.json')

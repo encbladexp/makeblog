@@ -13,13 +13,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from makeblog.tools import directorymaker
 from makeblog.post import Post
 from makeblog.templating import jinja, render
 from datetime import datetime
 from operator import attrgetter
 from os import listdir, system, walk
-from time import strftime
+
 
 class Blog(object):
     def __init__(self, config):
@@ -57,53 +56,60 @@ class Blog(object):
         # render index page
         startposts = posts[-5:]
         startposts.reverse()
-        render('chronological.html','index.html',posts=startposts)
+        render('chronological.html', 'index.html', posts=startposts)
         # render main feed
         feedposts = posts[-10:]
         feedposts.reverse()
-        render('atom.html','feed.atom',posts=feedposts)
+        render('atom.html', 'feed.atom', posts=feedposts)
         # render category pages
         categoryposts = {}
         for post in posts:
             for category in post.categories:
-                if not category in categoryposts:
+                if category not in categoryposts:
                     categoryposts[category] = []
                 categoryposts[category].append(post)
         for category in categoryposts.keys():
             thisposts = sorted(categoryposts[category], key=attrgetter('date'))
             thisposts.reverse()
-            render('category.html','category/%s/index.html' % category,category=category, posts=thisposts)
+            render('category.html', 'category/%s/index.html' % category,
+                   category=category, posts=thisposts)
         # render category index
         categories = list(categoryposts.keys())
         categories.sort()
-        render('categories.html','category/index.html',categories=categories)
+        render('categories.html', 'category/index.html', categories=categories)
         # render category feeds
         for category in categoryposts.keys():
-            feedposts = sorted(categoryposts[category], key=attrgetter('date'))[-10:]
+            feedposts = sorted(categoryposts[category],
+                               key=attrgetter('date'))[-10:]
             feedposts.reverse()
-            render('atom.html','category/%s/feed.atom' % category,posts=feedposts)
+            render('atom.html', 'category/%s/feed.atom' % category,
+                   posts=feedposts)
         # render archive pages
         timeposts = {}
         for post in posts:
-            if not post.date.year in timeposts:
+            if post.date.year not in timeposts:
                 timeposts[post.date.year] = {}
-            if not post.date.month in timeposts[post.date.year]:
+            if post.date.month not in timeposts[post.date.year]:
                 timeposts[post.date.year][post.date.month] = []
             timeposts[post.date.year][post.date.month].append(post)
         for year in timeposts.keys():
             for month in timeposts[year].keys():
-                archiveposts = sorted(timeposts[year][month], key=attrgetter('date'))
+                archiveposts = sorted(timeposts[year][month],
+                                      key=attrgetter('date'))
                 archiveposts.reverse()
-                render('archive-posts.html','archive/%s/%s/index.html' % ( year, month ),year=year, month=month, posts=archiveposts)
+                render('archive-posts.html',
+                       'archive/%s/%s/index.html' % (year, month),
+                       year=year, month=month, posts=archiveposts)
             months = list(timeposts[year].keys())
             months.sort()
-            render('archive-annual.html','archive/%s/index.html' % year,months=months, year=year, yearposts=timeposts[year])
+            render('archive-annual.html', 'archive/%s/index.html' % year,
+                   months=months, year=year, yearposts=timeposts[year])
         years = list(timeposts.keys())
         years.sort()
-        render('archive.html','archive/index.html',years=years)
+        render('archive.html', 'archive/index.html', years=years)
         # static page rendering
         for path, directories, files in walk('src/'):
             for filename in files:
                 if filename.endswith('.html'):
-                    fname = '%s/%s' % ( path.replace('src/',''), filename )
-                    render(fname,fname)
+                    fname = '%s/%s' % (path.replace('src/', ''), filename)
+                    render(fname, fname)

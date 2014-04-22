@@ -30,7 +30,8 @@ class Server(object):
 
     def __init__(self):
         chdir('dst/')
-        self.httpd = TCPServerReusable(('127.0.0.1',8000), SimpleHTTPRequestHandler)
+        self.httpd = TCPServerReusable(('127.0.0.1', 8000),
+                                       SimpleHTTPRequestHandler)
 
     def serve(self):
         print("Starting Webserver for http://127.0.0.1:8000/")

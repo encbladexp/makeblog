@@ -13,12 +13,18 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from jinja2 import ChoiceLoader, FileSystemLoader, PackageLoader, Environment, StrictUndefined
+from jinja2 import ChoiceLoader, FileSystemLoader, PackageLoader, Environment,\
+    StrictUndefined
 from makeblog.tools import directorymaker
 
-jinja = Environment(loader=ChoiceLoader([FileSystemLoader(['templates','src']),PackageLoader('makeblog')]),undefined=StrictUndefined)
+jinja = Environment(
+    loader=ChoiceLoader(
+        [FileSystemLoader(['templates', 'src']), PackageLoader('makeblog')]
+    ),
+    undefined=StrictUndefined)
 
-def render(template,filename,**kwargs):
+
+def render(template, filename, **kwargs):
     """
     Render Content from *argv to filename with template.
     """

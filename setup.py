@@ -25,5 +25,5 @@ setup(name='makeblog',
       url='https://github.com/encbladexp/makeblog',
       scripts=['makeblog-bin'],
       packages=['makeblog'],
-      package_data={'makeblog':['templates/*.html']}
-     )
+      package_data={'makeblog': ['templates/*.html']}
+      )

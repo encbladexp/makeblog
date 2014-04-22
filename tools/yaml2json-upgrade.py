@@ -17,18 +17,18 @@
 from os import listdir
 from re import compile, MULTILINE
 from yaml import load
-from json import dump, dumps
+from json import dump
 
 yaml_sep = compile("^---$", MULTILINE)
 
-for directory in ('posts','drafts'):
+for directory in ('posts', 'drafts'):
     for post in listdir(directory):
-        with open('%s/%s' % ( directory, post ),'r') as f:
+        with open('%s/%s' % (directory, post), 'r') as f:
             postparts = yaml_sep.split(f.read(), maxsplit=2)
             headers = load(postparts[1])
             content = postparts[2]
-        with open('%s/%s' % ( directory, post ),'w') as f:
+        with open('%s/%s' % (directory, post), 'w') as f:
             f.write('---\n')
-            dump(headers,f,indent=1,ensure_ascii=False)
+            dump(headers, f, indent=1, ensure_ascii=False)
             f.write('\n---')
             f.write(content)
