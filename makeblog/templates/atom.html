@@ -20,7 +20,7 @@
     <uri>{{ blog.config['blog']['url'] }}</uri>
     </author>
     <title type="html"><![CDATA[{{post.title}}]]></title>
-    <link rel="alternate" type="text/html" href="{{ post.permalink }}" />
+    <link rel="alternate" type="text/html" href="{{ post.permalink }}/" />
     <id>{{ post.permalink }}</id>
     <updated>{{post.updated.strftime("%Y-%m-%dT%H:%M:%SZ")}}</updated>
     <published>{{post.date.strftime("%Y-%m-%dT%H:%M:%SZ")}}</published>

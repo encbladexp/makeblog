@@ -1,6 +1,10 @@
 {% extends 'site.html' %}
 {% from 'post.html' import postrenderer %}
 {% block title %}{{ super() }} - {{ post.title }}{% endblock %}
+{% block head %}
+{{ super() }}
+<link rel="canonical" href="{{ post.permalink }}/" />
+{% endblock %}
 {% block content %}
 {{ postrenderer(post) }}
 <div id="socialshareprivacy"></div>

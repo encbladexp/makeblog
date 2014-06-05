@@ -1,5 +1,5 @@
 {% macro postrenderer(post) %}
-<h1 class='bottom'><a href="{{ post.permalink }}" name="{{ post.slug }}" rel="bookmark" title="Permanent Link to {{ post.title }}">{{post.title}}</a></h1>
+<h1 class='bottom'><a href="{{ post.permalink }}/" name="{{ post.slug }}" rel="bookmark" title="Permanent Link to {{ post.title }}">{{post.title}}</a></h1>
 <div class='quiet'>{{post.date.strftime("%Y-%m-%d %H:%M")}} | categories: 
 {% for category in post.categories %}
 <a href="/category/{{ category }}">{{ category }}</a>
@@ -11,7 +11,7 @@
 {% macro postlistrenderer(posts) %}
 <ul>
 {% for post in posts %}
-<li><a href="{{ post.permalink }}">{{ post.title }}</a></li>
+<li><a href="{{ post.permalink }}/">{{ post.title }}</a></li>
 {% endfor %}
 </ul>
 {% endmacro %}

@@ -4,7 +4,7 @@
 <h1>Archiv {{ year }}</h1>
 <ul>
 {% for month in months %}
-<li><a href="/archive/{{ year }}/{{ month }}">{{ yearposts[month][0].date.strftime('%B') }}</a></li>
+<li><a href="/archive/{{ year }}/{{ month }}/">{{ yearposts[month][0].date.strftime('%B') }}</a></li>
 {% endfor %}
 </ul>
 {% endblock %}
