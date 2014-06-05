@@ -1,6 +1,5 @@
 #!/bin/bash
 echo "Rsync dst to target..."
-rsync -zrv --delete dst/ strato1:/home/stefan/blog
+rsync -zrv --delete dst/ servername:/var/path/to/your/blog
 echo "Removeing dst content..."
 rm -r dst
-echo "All fine, Please run sudo update-blog on your remote target."
