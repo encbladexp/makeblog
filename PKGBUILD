@@ -8,7 +8,7 @@ url="https://github.com/encbladexp/makeblog"
 license=('GPL3')
 options=(!emptydirs)
 depends=('python-pytz' 'python-jinja' 'python-pygments')
-makedepends=('mercurial')
+makedepends=('git')
 source=('makeblog::git://github.com/encbladexp/makeblog#tag='$pkgver)
 md5sums=('SKIP')
 
