@@ -26,6 +26,7 @@ DEFAULT_CONFIG = {
         'description': 'Because i can!',
         'googleplus': True,
         'twitter': True,
+        'flattr': True,
         'categories': ['category1', 'category2', 'category4'],
         'defaultauthor': 'me',
         'timezone': 'Europe/Berlin',
@@ -40,6 +41,7 @@ DEFAULT_CONFIG = {
             'amazon': None,
             'bitcoin': None,
             'mail': None
+            'flattr': None
         }
     }
 }

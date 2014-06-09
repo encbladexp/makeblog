@@ -39,16 +39,20 @@ class Author(object):
 
     @property
     def twitter(self):
-        return self.data['googleplus']
+        return self.data['twitter']
 
     @property
     def amazon(self):
-        return self.data['googleplus']
+        return self.data['amazon']
 
     @property
     def bitcoin(self):
-        return self.data['googleplus']
+        return self.data['bitcoin']
 
     @property
     def mail(self):
-        return self.data['googleplus']
+        return self.data['mail']
+
+    @property
+    def flattr(self):
+        return self.data['flattr']
