@@ -113,12 +113,12 @@ class Blog(object):
             for filename in files:
                 if filename.endswith('.html'):
                     fname = '%s/%s' % (path.replace('src/', ''), filename)
-                    render(fname, fname)
+                    render('%s/%s' % (path, filename), fname)
         # render author index
         render('author-index.html', 'author/index.html', authors=authors(self.config))
         # render author pages
         for author in authors(self.config):
             if access('authors/%s.html' % author.nick, F_OK):
-                render('%s.html' % author.nick, 'author/%s/index.html' % author.nick, author=author)
+                render('authors/%s.html' % author.nick, 'author/%s/index.html' % author.nick, author=author)
             else:
                 render('author.html','author/%s/index.html' % author.nick, author=author)

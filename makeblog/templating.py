@@ -14,13 +14,19 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from jinja2 import ChoiceLoader, FileSystemLoader, PackageLoader, Environment,\
-    StrictUndefined
+    StrictUndefined, PrefixLoader
 from makeblog.tools import directorymaker
 
 jinja = Environment(
-    loader=ChoiceLoader(
-        [FileSystemLoader(['templates', 'authors', 'src']), PackageLoader('makeblog')]
-    ),
+    loader=ChoiceLoader([
+        PrefixLoader({
+            'base': PackageLoader('makeblog'),
+            'authors': FileSystemLoader('authors'),
+            'src': FileSystemLoader('src')
+        }),
+        FileSystemLoader('templates'),
+        PackageLoader('makeblog')
+    ]),
     undefined=StrictUndefined)
 
 
