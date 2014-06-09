@@ -7,119 +7,14 @@
 <title>{% block title %}{{ blog.config['blog']['name'] }}{% endblock %}</title>
 <link rel="alternate" type="application/atom+xml" title="Atom 1.0"
 href="/feed.atom" />
-<link rel='stylesheet' href='/blueprint-css/screen.css' type='text/css' media='screen, projection' />
-<link rel='stylesheet' href='/blueprint-css/plugins/fancy-type/screen.css' type='text/css' media='screen, projection' />
-<link rel='stylesheet' href='/blueprint-css/print.css' type='text/css' media='print' />
-<link rel='stylesheet' href='/css/pygments_fruity.css' type='text/css' />
-<link rel='stylesheet' href='/css/style.css' type='text/css' />
-<link rel="publisher" href="https://plus.google.com/103105755986251553871" />
-<link rel="icon" href="/favicon.ico" type="image/x-icon" />
-<script type="text/javascript" src="/js/jquery.js"></script> 
-<script type="text/javascript" src="/js/socialshareprivacy/jquery.socialshareprivacy.min.js"></script>
-<script type="text/javascript">
- jQuery(document).ready(function($){
-  if($('#socialshareprivacy').length > 0){
-   $('#socialshareprivacy').socialSharePrivacy({
-    services:{
-     facebook:{
-      'status':'off',
-     },
-     twitter:{
-      'dummy_img':'/js/socialshareprivacy/socialshareprivacy/images/dummy_twitter.png',
-      'perma_option':'off',
-     },
-     gplus:{
-      'dummy_img':'/js/socialshareprivacy/socialshareprivacy/images/dummy_gplus.png',
-      'perma_option':'off',
-     },
-    },
-    'css_path':'/js/socialshareprivacy/socialshareprivacy/socialshareprivacy.css',
-   }); 
-  }
-});
-</script>
 {% endblock %}
 </head>
 <body>
-<div class='container'>
-<div id='header-container' class='span-24 last'>
-<div id='header-image-area' class='span-4 first'>
-<img src='/archlinux-tux.png' alt='Arch Linux Tux' id='header-image' />
-</div>
-<div id='header-text-area' class='span-12'>
+{% block body %}
 <h1><a href="{{ blog.config['blog']['url'] }}">{{ blog.config['blog']['name'] }}</a></h1>
 <h2 class='alt'>{{ blog.config['blog']['description'] }}</h2>
-</div>
-<div id='header-search-area' class='span-8 last'>
-<iframe src="http://duckduckgo.com/search.html?width=250&site={{ blog.config['blog']['domain'] }}&prefill=Suchen? Finden!" style="overflow:hidden;width:308px;height:40px;" frameborder="0"></iframe>
-</div>
-<hr />
-</div>
-<div id='content-container' class='span-24 last'>
-<div id='content-area' class='span-16 colborder'>
 {% block content %}
 {% endblock %}
-</div>
-<div id='sidebar-area' class='span-7 last'>
-<!-- Navigationsbox -->	
-<div id='navigation'>
-<h3 class='caps'>Navigation</h3>
-<div class='box'>
-<a href="/archive/">Archiv</a><br />
-<a href="/category/">Kategorien</a><br />
-<a href="/author/">Autoren</a><br />
-<a href="/impressum/">Impressum</a>
-</div>
-</div>
-<!-- Ende Navigationsbox -->
-<!-- Authorbox -->	
-{% if post is defined %}
-<div id='authorinfo'>
-<h3 class='caps'>Autor</h3>
-<div class='box'>
-{% if blog.config['authors'][post.author]['googleplus'] is not none %}
-<a href="{{ blog.config['authors'][post.author]['googleplus'] }}" rel="publisher"><img src='/gplus.png' alt='Google+' /></a>
-{% endif %}
-{% if blog.config['authors'][post.author]['twitter'] is not none %}
-<a href="{{ blog.config['authors'][post.author]['twitter'] }}"><img src='/twitter.png' alt='Twitter' /></a>
-{% endif %}
-</div>
-</div>
-{% endif %}
-<!-- Ende Authorbox -->
-<!-- Spendenbox -->	
-<div id='donateinfo'>
-<h3 class='caps'>Spenden</h3>
-<div class='box'>
-
-{% if post is defined %}
-    {% if blog.config['authors'][post.author]['amazon'] is not none %}
-    <a href="{{ blog.config['authors'][post.author]['amazon'] }}">Amazon Wunschzettel</a><br />
-    {% endif %}
-{% elif blog.config['authors'][blog.config['blog']['defaultauthor']]['amazon'] is not none %}
-    <a href="{{ blog.config['authors'][blog.config['blog']['defaultauthor']]['amazon'] }}">Amazon Wunschzettel</a><br />
-{% endif %}
-
-{% if post is defined %}
-    {% if blog.config['authors'][post.author]['bitcoin'] is not none %}
-    <a href="http://bitcoin.org">Bitcoin</a> an: <em>{{ blog.config['authors'][post.author]['bitcoin'] }}</em>
-    {% endif %}
-{% elif blog.config['authors'][blog.config['blog']['defaultauthor']]['bitcoin'] is not none %}
-    <a href="http://bitcoin.org">Bitcoin</a> an: <em>{{ blog.config['authors'][blog.config['blog']['defaultauthor']]['bitcoin'] }}</em>
-{% endif %}
-</div>
-</div>
-<!-- Ende Spendenbox -->
-<!-- Softwarebox -->	
-<div id='softwareinfo'>
-<h3 class='caps'>Software</h3>
-<div class='box'>
-Powered by <a href="https://github.com/encbladexp/makeblog">makeblog</a>.
-</div>
-</div>
-<!-- Ende Softwarebox -->
-</div>
-</div>	
-</div>
+{% endblock body %}
 </body>
 </html>
