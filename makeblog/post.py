@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from makeblog.tools import slugify, directorymaker, newfile
 from makeblog.pygments import pygmentify
-from makeblog.templating import jinja
+from makeblog.templating import render
 from datetime import datetime
 from pytz import timezone
 from re import compile, MULTILINE
@@ -117,11 +117,9 @@ class Post(object):
                 f.write("\n")
 
     def render(self):
-        template = jinja.get_template('article.html')
         blogurl = self.blog.config['blog']['url']
         dirname = self.permalink.replace('%s/' % blogurl, '')
-        with open(directorymaker('%s/index.html' % dirname), 'w') as f:
-            f.write(template.render(post=self))
+        render('article.html','%s/index.html' % dirname, post=self)
 
     @pygmentify
     def content(self):
