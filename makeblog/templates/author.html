@@ -1,0 +1,10 @@
+{% extends 'site.html' %}
+{% block title %}{{ super() }} - Autor - {{ author.nick }}{% endblock %}
+{% block content %}
+<h1>{{ author.nick }}</h1>
+<dl>
+	<dt>Name</dt>
+	<dd>{{ author.name }}</dd>
+</dl>
+{% block author_extended %}{% endblock %}
+{% endblock %}

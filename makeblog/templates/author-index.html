@@ -1,0 +1,10 @@
+{% extends 'site.html' %}
+{% block title %}{{ super() }} - Autoren{% endblock %}
+{% block content %}
+<h1>Autoren</h1>
+<ul>
+{% for author in authors %}
+<li><a href="/author/{{ author.nick }}">{{ author.nick }} ({{ author.name }})</a></li>
+{% endfor %}
+</ul>
+{% endblock %}

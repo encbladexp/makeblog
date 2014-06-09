@@ -14,10 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from makeblog.post import Post
+from makeblog.author import authors
 from makeblog.templating import jinja, render
 from datetime import datetime
 from operator import attrgetter
-from os import listdir, system, walk
+from os import listdir, system, walk, access, F_OK
 
 
 class Blog(object):
@@ -113,3 +114,11 @@ class Blog(object):
                 if filename.endswith('.html'):
                     fname = '%s/%s' % (path.replace('src/', ''), filename)
                     render(fname, fname)
+        # render author index
+        render('author-index.html', 'author/index.html', authors=authors(self.config))
+        # render author pages
+        for author in authors(self.config):
+            if access('authors/%s.html' % author.nick, F_OK):
+                render('%s.html' % author.nick, 'author/%s/index.html' % author.nick, author=author)
+            else:
+                render('author.html','author/%s/index.html' % author.nick, author=author)

@@ -19,7 +19,7 @@ from makeblog.tools import directorymaker
 
 jinja = Environment(
     loader=ChoiceLoader(
-        [FileSystemLoader(['templates', 'src']), PackageLoader('makeblog')]
+        [FileSystemLoader(['templates', 'authors', 'src']), PackageLoader('makeblog')]
     ),
     undefined=StrictUndefined)
 
