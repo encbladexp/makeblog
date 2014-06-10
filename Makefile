@@ -10,3 +10,4 @@ coverage:
 clean:
 	-rm -r htmlcov
 	-rm -r dst
+	-rm -r build
