@@ -6,6 +6,7 @@
 <link rel="canonical" href="{{ post.permalink }}/" />
 {% endblock %}
 {% block content %}
+{% include 'pre_article.html' ignore missing %}
 {{ postrenderer(post) }}
-<div id="socialshareprivacy"></div>
+{% include 'post_article.html' ignore missing %}
 {% endblock %}
