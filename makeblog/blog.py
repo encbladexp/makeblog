@@ -18,7 +18,7 @@ from makeblog.author import authors
 from makeblog.templating import jinja, render
 from datetime import datetime
 from operator import attrgetter
-from os import listdir, system, walk, access, F_OK
+from os import listdir, system, walk
 
 
 class Blog(object):
@@ -118,7 +118,4 @@ class Blog(object):
         render('author-index.html', 'author/index.html', authors=authors(self.config))
         # render author pages
         for author in authors(self.config):
-            if access('authors/%s.html' % author.nick, F_OK):
-                render('authors/%s.html' % author.nick, 'author/%s/index.html' % author.nick, author=author)
-            else:
-                render('author.html','author/%s/index.html' % author.nick, author=author)
+            render('author.html','author/%s/index.html' % author.nick, author=author)

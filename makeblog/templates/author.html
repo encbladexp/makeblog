@@ -6,5 +6,5 @@
 	<dt>Name</dt>
 	<dd>{{ author.name }}</dd>
 </dl>
-{% block author_extended %}{% endblock %}
+{% include "authors/%s.html"|format(author.nick) ignore missing %}
 {% endblock %}
