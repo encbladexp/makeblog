@@ -40,7 +40,7 @@ DEFAULT_CONFIG = {
             'twitter': None,
             'amazon': None,
             'bitcoin': None,
-            'mail': None
+            'mail': None,
             'flattr': None
         }
     }
