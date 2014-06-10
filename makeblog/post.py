@@ -121,6 +121,7 @@ class Post(object):
         dirname = self.permalink.replace('%s/' % blogurl, '')
         render('article.html','%s/index.html' % dirname, post=self)
 
+    @property
     @pygmentify
     def content(self):
         return self._content

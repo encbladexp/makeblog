@@ -28,7 +28,7 @@
     <category scheme="{{ blog.config['blog']['url'] }}" term="{{ category }}" />
 {% endfor %}
     <summary type="html"><![CDATA[{{post.title}}]]></summary>
-    <content type="html" xml:base="{{ post.permalink }}"><![CDATA[{{post.content()}}]]></content>
+    <content type="html" xml:base="{{ post.permalink }}"><![CDATA[{{post.content}}]]></content>
   </entry>
 {% endfor %}
 </feed>
