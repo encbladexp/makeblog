@@ -14,12 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-def authors(config):
-    authorlist = list(config['authors'].keys())
-    authorlist.sort()
-    for item in authorlist:
-        yield Author(config['authors'][item])
-
 class Author(object):
     
     def __init__(self, data):

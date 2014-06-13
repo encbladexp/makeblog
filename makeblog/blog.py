@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from makeblog.post import Post
-from makeblog.author import authors
+from makeblog.author import Author
 from makeblog.templating import jinja, render
 from makeblog.plugins import PluginMount, PreRenderPlugin, RenderPlugin,\
         PostRenderPlugin
@@ -61,6 +61,17 @@ class LoadPosts(PreRenderPlugin):
                 p = Post(self.blog)
                 p.load('drafts/%s' % filename)
                 self.blog.posts.append(p)
+
+
+class LoadAuthors(PreRenderPlugin):
+    priority = 15
+
+    def run(self):
+        # load all authors
+        self.blog.authors = sorted(
+            [Author(self.blog.config['authors'][item])\
+             for item in self.blog.config['authors'].keys()],
+            key=attrgetter('nick'))
 
 
 class SortPosts(PreRenderPlugin):
@@ -214,7 +225,7 @@ class AuthorIndexRenderer(RenderPlugin):
 
     def render(self):
         # render author index
-        render('author-index.html', 'author/index.html', authors=authors(self.blog.config))
+        render('author-index.html', 'author/index.html', authors=self.blog.authors)
 
 
 class AuthorPageRenderer(RenderPlugin):
@@ -222,5 +233,5 @@ class AuthorPageRenderer(RenderPlugin):
 
     def render(self):
         # render author pages
-        for author in authors(self.blog.config):
+        for author in self.blog.authors:
             render('author.html','author/%s/index.html' % author.nick, author=author)
