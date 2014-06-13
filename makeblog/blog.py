@@ -16,6 +16,8 @@
 from makeblog.post import Post
 from makeblog.author import authors
 from makeblog.templating import jinja, render
+from makeblog.plugins import PluginMount, PreRenderPlugin, RenderPlugin,\
+        PostRenderPlugin
 from datetime import datetime
 from operator import attrgetter
 from os import listdir, system, walk
@@ -24,70 +26,155 @@ from os import listdir, system, walk
 class Blog(object):
     def __init__(self, config):
         self.config = config
+        self.posts = []
+        self.categoryposts = {}
+        self.authors = []
+        self.draft = False
 
     def build(self, draft=False):
         # config
         jinja.globals['blog'] = self
         jinja.globals['now'] = datetime.utcnow()
+        self.draft = draft
+        # run pre render plugins
+        for plugin in PluginMount.get_plugins(PreRenderPlugin, self):
+            plugin.run()
+        # run render plugins
+        for plugin in PluginMount.get_plugins(RenderPlugin, self):
+            plugin.render()
+        # run post render plugins
+        for plugin in PluginMount.get_plugins(PostRenderPlugin, self):
+            plugin.run()
+
+
+class LoadPosts(PreRenderPlugin):
+    priority = 10
+
+    def run(self):
         # load all posts
-        unsortedposts = []
         for filename in listdir('posts'):
-            p = Post(self)
+            p = Post(self.blog)
             p.load('posts/%s' % filename)
-            unsortedposts.append(p)
-        if draft:
+            self.blog.posts.append(p)
+        if self.blog.draft:
             for filename in listdir('drafts'):
-                p = Post(self)
+                p = Post(self.blog)
                 p.load('drafts/%s' % filename)
-                unsortedposts.append(p)
+                self.blog.posts.append(p)
+
+
+class SortPosts(PreRenderPlugin):
+    priority = 20
+
+    def run(self):
         # sort posts by date
-        posts = sorted(unsortedposts, key=attrgetter('date'))
+        self.blog.posts = sorted(self.blog.posts, key=attrgetter('date'))
+
+
+class LinkPosts(PreRenderPlugin):
+    priority = 30
+
+    def run(self):
         # link next/prev posts
-        for post in posts:
-            i = posts.index(post)
+        for post in self.blog.posts:
+            i = self.blog.posts.index(post)
             if i:
-                post.prev = posts[i-1]
-            if i != len(posts)-1:
-                post.next = posts[i+1]
+                post.prev = self.blog.posts[i-1]
+            if i != len(self.blog.posts)-1:
+                post.next = self.blog.posts[i+1]
+
+
+class CategorizePosts(PreRenderPlugin):
+    priority = 40
+
+    def run(self):
+        # categorize posts
+        for post in self.blog.posts:
+            for category in post.categories:
+                if category not in self.blog.categoryposts:
+                    self.blog.categoryposts[category] = []
+                self.blog.categoryposts[category].append(post)
+
+
+class RsyncStaticPlugin(PreRenderPlugin):
+    priority = 50
+
+    def run(self):
         # rsync src/ to dst/ for static stuff
         system('rsync -a src/ dst')
+
+
+class ArticleRenderer(RenderPlugin):
+    priority = 10
+
+    def render(self):
         # render all post articles
-        for post in posts:
+        for post in self.blog.posts:
             post.render()
+
+
+class IndexRenderer(RenderPlugin):
+    priority = 20
+
+    def render(self):
         # render index page
-        startposts = posts[-5:]
+        startposts = self.blog.posts[-5:]
         startposts.reverse()
         render('chronological.html', 'index.html', posts=startposts)
+
+
+class FeedRenderer(RenderPlugin):
+    priority = 30
+
+    def render(self):
         # render main feed
-        feedposts = posts[-10:]
+        feedposts = self.blog.posts[-10:]
         feedposts.reverse()
         render('atom.html', 'feed.atom', posts=feedposts)
+
+
+class CategoryPageRenderer(RenderPlugin):
+    priority = 40
+
+    def render(self):
         # render category pages
-        categoryposts = {}
-        for post in posts:
-            for category in post.categories:
-                if category not in categoryposts:
-                    categoryposts[category] = []
-                categoryposts[category].append(post)
-        for category in categoryposts.keys():
-            thisposts = sorted(categoryposts[category], key=attrgetter('date'))
+        for category in self.blog.categoryposts.keys():
+            thisposts = sorted(self.blog.categoryposts[category], key=attrgetter('date'))
             thisposts.reverse()
             render('category.html', 'category/%s/index.html' % category,
                    category=category, posts=thisposts)
+
+
+class CategoryIndexRenderer(RenderPlugin):
+    priority = 50
+
+    def render(self):
         # render category index
-        categories = list(categoryposts.keys())
+        categories = list(self.blog.categoryposts.keys())
         categories.sort()
         render('categories.html', 'category/index.html', categories=categories)
+
+
+class CategoryFeedRenderer(RenderPlugin):
+    priority = 60
+
+    def render(self):
         # render category feeds
-        for category in categoryposts.keys():
-            feedposts = sorted(categoryposts[category],
+        for category in self.blog.categoryposts.keys():
+            feedposts = sorted(self.blog.categoryposts[category],
                                key=attrgetter('date'))[-10:]
             feedposts.reverse()
             render('atom.html', 'category/%s/feed.atom' % category,
                    posts=feedposts)
+
+
+class ArchiveRenderer(RenderPlugin):
+    priority = 70
+
+    def render(self):
         # render archive pages
         timeposts = {}
-        for post in posts:
+        for post in self.blog.posts:
             if post.date.year not in timeposts:
                 timeposts[post.date.year] = {}
             if post.date.month not in timeposts[post.date.year]:
@@ -108,14 +195,32 @@ class Blog(object):
         years = list(timeposts.keys())
         years.sort()
         render('archive.html', 'archive/index.html', years=years)
+
+
+class StaticRenderer(RenderPlugin):
+    priority = 80
+
+    def render(self):
         # static page rendering
         for path, directories, files in walk('src/'):
             for filename in files:
                 if filename.endswith('.html'):
                     fname = '%s/%s' % (path.replace('src/', ''), filename)
                     render('%s/%s' % (path, filename), fname)
+
+
+class AuthorIndexRenderer(RenderPlugin):
+    priority = 90
+
+    def render(self):
         # render author index
-        render('author-index.html', 'author/index.html', authors=authors(self.config))
+        render('author-index.html', 'author/index.html', authors=authors(self.blog.config))
+
+
+class AuthorPageRenderer(RenderPlugin):
+    priority = 100
+
+    def render(self):
         # render author pages
-        for author in authors(self.config):
+        for author in authors(self.blog.config):
             render('author.html','author/%s/index.html' % author.nick, author=author)
