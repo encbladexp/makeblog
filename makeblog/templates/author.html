@@ -2,9 +2,34 @@
 {% block title %}{{ super() }} - Autor - {{ author.nick }}{% endblock %}
 {% block content %}
 <h1>{{ author.nick }}</h1>
-<dl>
-	<dt>Name</dt>
-	<dd>{{ author.name }}</dd>
-</dl>
+<p>Der Author mit dem Nickname {{ author.nick }} trägt im wirklichen Leben den
+Namen {{ author.name }}.</p>
+<h2>Soziale Netzwerke / Kontakt</h2>
+<h2>Spenden</h2>
+<h2>Kontakt</h2>
+<h2>Statistik</h2>
+<table>
+	{% if author.first_post %}
+	<tr>
+		<th>Erster Artikel</th>
+		<td>{{ author.first_post.date }} - {{ author.first_post.title }}</td>
+	</tr>
+	<tr>
+		<th>Letzer Artikel</th>
+		<td>{{ author.last_post.date }} - {{ author.last_post.title }}</td>
+	</tr>
+	{% endif %}
+	<tr>
+		<th>Artikel Gesamt</th>
+		<td>{{ author.post_count }} (X.Y%)</td>
+	</tr>
+	<tr>
+		<th>Letzte 10 Artikel</th>
+		<td>
+			{% for post in author.posts[-10:] %}
+			{{ post.date }} - {{ post.title }}<br/>
+			{% endfor %}
+		</td>
+</table>
 {% include "authors/%s.html"|format(author.nick) ignore missing %}
 {% endblock %}

@@ -82,6 +82,38 @@ class SortPosts(PreRenderPlugin):
         self.blog.posts = sorted(self.blog.posts, key=attrgetter('date'))
 
 
+class SortPostsAuthor(PreRenderPlugin):
+    priority = 21
+
+    def run(self):
+        # sort posts to authors
+        for author in self.blog.authors:
+            author.posts = [post for post in self.blog.posts if post.author == author.nick]
+
+
+class CountPostsAuthor(PreRenderPlugin):
+    priority = 22
+
+    def run(self):
+        # count posts per author
+        for author in self.blog.authors:
+            author.post_count = len(author.posts)
+
+
+class FristLastAuthorPosts(PreRenderPlugin):
+    priority = 23
+
+    def run(self):
+        # first/last post for authors
+        for author in self.blog.authors:
+            if len(author.posts):
+                author.first_post = author.posts[0]
+                author.last_post = author.posts[-1]
+            else:
+                author.first_post = None
+                author.last_post = None
+
+
 class LinkPosts(PreRenderPlugin):
     priority = 30
 
