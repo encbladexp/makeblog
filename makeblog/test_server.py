@@ -14,4 +14,22 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from unittest import TestCase
+from os import rmdir, mkdir
 from makeblog.server import *
+
+class TestServer(TestCase):
+
+	def setUp(self):
+		try:
+			mkdir('dst')
+		except FileExistsError:
+			pass
+
+	def test_server_init(self):
+		self.assertIsInstance(Server(), Server)
+
+	def tearDown(self):
+		try:
+			rmdir('dst')
+		except FileNotFoundError:
+			pass
