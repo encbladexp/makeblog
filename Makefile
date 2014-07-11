@@ -4,8 +4,8 @@ test:
 coverage:
 	coverage erase
 	coverage run -m unittest
-	coverage report
-	coverage html
+	coverage report --include="makeblog*"
+	coverage html --include="makeblog*"
 
 clean:
 	-rm -r htmlcov
