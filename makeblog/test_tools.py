@@ -66,7 +66,5 @@ class TestNewfile(TestCase):
     def tearDown(self):
         if access('posts/1-test.html', F_OK):
             unlink('posts/1-test.html')
-        if access('drafts/1-test.html', F_OK):
-            unlink('drafts/1-test.html')
         rmdir('posts')
         rmdir('drafts')
