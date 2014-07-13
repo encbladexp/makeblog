@@ -26,7 +26,9 @@ class TestServer(TestCase):
 			pass
 
 	def test_server_init(self):
-		self.assertIsInstance(Server(), Server)
+		s = Server()
+		self.assertIsInstance(s, Server)
+		s.httpd.socket.close()
 
 	def tearDown(self):
 		try:
