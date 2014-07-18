@@ -29,6 +29,7 @@ class TestWritedefaultconfig(TestCase):
         self.assertTrue(access('src', F_OK))
         self.assertTrue(access('posts', F_OK))
         self.assertTrue(access('drafts', F_OK))
+        self.assertTrue(access('authors', F_OK))
         self.assertTrue(access('config.json', F_OK))
 
     def test_secondrun(self):
@@ -40,7 +41,7 @@ class TestWritedefaultconfig(TestCase):
 
     def tearDown(self):
         unlink('config.json')
-        for directory in ('src', 'posts', 'drafts'):
+        for directory in ('src', 'posts', 'drafts', 'authors'):
             rmdir(directory)
 
 

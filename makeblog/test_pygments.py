@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from unittest import TestCase
+from os import rmdir, unlink
 from makeblog.pygments import *
 
 CONTENT_WITHOUT_CODE = """
@@ -40,12 +41,17 @@ $$/code
 
 class TestPygments(TestCase):
 
-	def test_pygmentify(self):
+    def test_pygmentify(self):
 
-		@pygmentify
-		def render(content):
-			return content
+        @pygmentify
+        def render(content):
+            return content
 
-		self.assertIsInstance(render(CONTENT_WIHT_CODE),str)
-		self.assertIsInstance(render(CONTENT_WITHOUT_CODE),str)
-		self.assertIsInstance(render(CONTENT_WITH_MISSING_LEXER),str)
+        self.assertIsInstance(render(CONTENT_WIHT_CODE),str)
+        self.assertIsInstance(render(CONTENT_WITHOUT_CODE),str)
+        self.assertIsInstance(render(CONTENT_WITH_MISSING_LEXER),str)
+
+    def tearDown(self):
+        unlink('dst/css/pygments_fruity.css')
+        rmdir('dst/css')
+        rmdir('dst')
