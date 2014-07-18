@@ -31,7 +31,7 @@ class Blog(object):
         self.authors = []
         self.draft = False
 
-    def build(self, draft=False):
+    def build(self, draft=False): # pragma: no cover
         # config
         jinja.globals['blog'] = self
         jinja.globals['now'] = datetime.utcnow()
