@@ -54,12 +54,12 @@ class LoadPosts(PreRenderPlugin):
         # load all posts
         for filename in listdir('posts'):
             p = Post(self.blog)
-            p.load('posts/%s' % filename)
+            p.load('posts/{}'.format(filename))
             self.blog.posts.append(p)
         if self.blog.draft:
             for filename in listdir('drafts'):
                 p = Post(self.blog)
-                p.load('drafts/%s' % filename)
+                p.load('drafts/{}'.format(filename))
                 self.blog.posts.append(p)
 
 
@@ -184,7 +184,7 @@ class CategoryPageRenderer(RenderPlugin):
         for category in self.blog.categoryposts.keys():
             thisposts = sorted(self.blog.categoryposts[category], key=attrgetter('date'))
             thisposts.reverse()
-            render('category.html', 'category/%s/index.html' % category,
+            render('category.html', 'category/{}/index.html'.format(category),
                    category=category, posts=thisposts)
 
 
@@ -207,7 +207,7 @@ class CategoryFeedRenderer(RenderPlugin):
             feedposts = sorted(self.blog.categoryposts[category],
                                key=attrgetter('date'))[-10:]
             feedposts.reverse()
-            render('atom.html', 'category/%s/feed.atom' % category,
+            render('atom.html', 'category/{}/feed.atom'.format(category),
                    posts=feedposts)
 
 
@@ -229,11 +229,11 @@ class ArchiveRenderer(RenderPlugin):
                                       key=attrgetter('date'))
                 archiveposts.reverse()
                 render('archive-posts.html',
-                       'archive/%s/%s/index.html' % (year, month),
+                       'archive/{}/{}/index.html'.format(year, month),
                        year=year, month=month, posts=archiveposts)
             months = list(timeposts[year].keys())
             months.sort()
-            render('archive-annual.html', 'archive/%s/index.html' % year,
+            render('archive-annual.html', 'archive/{}/index.html'.format(year),
                    months=months, year=year, yearposts=timeposts[year])
         years = list(timeposts.keys())
         years.sort()
@@ -248,8 +248,8 @@ class StaticRenderer(RenderPlugin):
         for path, directories, files in walk('src/'):
             for filename in files:
                 if filename.endswith('.html'):
-                    fname = '%s/%s' % (path.replace('src/', ''), filename)
-                    render('%s/%s' % (path, filename), fname)
+                    fname = '{}/{}'.format(path.replace('src/', ''), filename)
+                    render('{}/{}'.format(path, filename), fname)
 
 
 class AuthorIndexRenderer(RenderPlugin):
@@ -266,4 +266,4 @@ class AuthorPageRenderer(RenderPlugin):
     def render(self):
         # render author pages
         for author in self.blog.authors:
-            render('author.html','author/%s/index.html' % author.nick, author=author)
+            render('author.html','author/{}/index.html'.format(author.nick), author=author)

@@ -23,11 +23,11 @@ yaml_sep = compile("^---$", MULTILINE)
 
 for directory in ('posts', 'drafts'):
     for post in listdir(directory):
-        with open('%s/%s' % (directory, post), 'r') as f:
+        with open('{}/{}'.format(directory, post), 'r') as f:
             postparts = yaml_sep.split(f.read(), maxsplit=2)
             headers = load(postparts[1])
             content = postparts[2]
-        with open('%s/%s' % (directory, post), 'w') as f:
+        with open('{}/{}'.format(directory, post), 'w') as f:
             f.write('---\n')
             dump(headers, f, indent=1, ensure_ascii=False)
             f.write('\n---')

@@ -68,14 +68,14 @@ def newfile(slug, draft=False):
                     if idre.match(filename)])
     fileid = 1 if len(files) == 0 else files[-1]+1
     articletype = 'drafts' if draft else 'posts'
-    return "%s/%i-%s.html" % (articletype, fileid, slug)
+    return "{}/{:d}-{}.html".format(articletype, fileid, slug)
 
 
 def directorymaker(path):
     """
     Creates directories required for path.
     """
-    path = 'dst/%s' % path
+    path = 'dst/{}'.format(path)
     directories = dirname(path)
     if not exists(directories):
         makedirs(directories)
