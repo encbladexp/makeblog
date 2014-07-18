@@ -27,7 +27,7 @@ Namen {{ author.name }}.</p>
 		<th>Letzte 10 Artikel</th>
 		<td>
 			{% for post in author.posts[-10:] %}
-			{{ post.date }} - {{ post.title }}<br/>
+			{{ post.date }} - {{ post.title }}<br>
 			{% endfor %}
 		</td>
 </table>
