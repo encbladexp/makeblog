@@ -66,7 +66,7 @@ class Post(object):
                     datetime.strptime(header['updated'],
                                       self.blog.config['blog']['dateformat']))
         if not self.permalink:
-            self.permalink = '%s/%s/%s' % (self.blog.config['blog']['url'],
+            self.permalink = '{}/{}/{}'.format(self.blog.config['blog']['url'],
                                            self.date.strftime('%Y/%m/%d'),
                                            slugify(self.title))
         self.slug = header['slug'] if 'slug' in header else slugify(self.title)
@@ -88,7 +88,7 @@ class Post(object):
         self.author = self.blog.config['blog']['defaultauthor']
         self.categories = self.blog.config['blog']['categories']
         self.updated = self.date
-        self.permalink = '%s/%s/%s' % (self.blog.config['blog']['url'],
+        self.permalink = '{}/{}/{}'.format(self.blog.config['blog']['url'],
                                        self.date.strftime('%Y/%m/%d'),
                                        slugify(self.title))
         self.save()
@@ -98,13 +98,13 @@ class Post(object):
         with open(self.filename, "w") as f:
             f.write("---\n")
             headers = {
-                "categories": "%s" % ", ".join(self.categories),
+                "categories": "{}".format(", ".join(self.categories)),
                 "permalink": self.permalink,
                 "guid": self.guid,
                 "title": self.title,
                 "author": self.author,
-                "date": "%s" % self.date.strftime(
-                    self.blog.config['blog']['dateformat']),
+                "date": "{}".format(self.date.strftime(
+                    self.blog.config['blog']['dateformat'])),
             }
             if self.updated is not self.date:
                 headers["updated"] = self.updated.strftime(
@@ -118,8 +118,8 @@ class Post(object):
 
     def render(self):
         blogurl = self.blog.config['blog']['url']
-        dirname = self.permalink.replace('%s/' % blogurl, '')
-        render('article.html','%s/index.html' % dirname, post=self)
+        dirname = self.permalink.replace('{}/'.format(blogurl), '')
+        render('article.html','{}/index.html'.format(dirname), post=self)
 
     @property
     @pygmentify

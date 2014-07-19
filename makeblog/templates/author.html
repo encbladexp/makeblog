@@ -31,5 +31,5 @@ Namen {{ author.name }}.</p>
 			{% endfor %}
 		</td>
 </table>
-{% include "authors/%s.html"|format(author.nick) ignore missing %}
+{% include "authors/{}.html".format(author.nick) ignore missing %}
 {% endblock %}
