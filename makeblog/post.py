@@ -54,7 +54,8 @@ class Post(object):
         if 'permalink' in header:
             self.permalink = header['permalink']
         self.guid = header['guid']
-        self.categories = [category.strip() for category in
+        if header['categories']:
+            self.categories = [category.strip() for category in
                            header['categories'].split(',')]
         self.date = timezone(self.blog.config['blog']['timezone']).\
             localize(datetime.strptime(header['date'],
