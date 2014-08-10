@@ -69,6 +69,6 @@ def writedefaultconfig():
             makedirs(directory)
     if not access('config.json', F_OK):
         with open('config.json', 'w') as f:
-            json.dump(DEFAULT_CONFIG, f, indent=1, ensure_ascii=False)
+            json.dump(DEFAULT_CONFIG, f, indent=1, ensure_ascii=False, sort_keys=True)
         return False
     return True
