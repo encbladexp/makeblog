@@ -110,7 +110,7 @@ class Post(object):
             if self.updated is not self.date:
                 headers["updated"] = self.updated.strftime(
                     self.blog.config['blog']['dateformat'])
-            json.dump(headers, f, indent=1, ensure_ascii=False)
+            json.dump(headers, f, indent=1, ensure_ascii=False, sort_keys=True)
             f.write("\n---")
             if self._content:
                 f.write(self._content)
