@@ -90,7 +90,8 @@ class TestPost(TestCase):
     def test_new(self):
         blog = TestBlog()
         post = Post(blog)
-        post.new('Titel')
+        rvalue = post.new('Titel')
+        self.assertIsInstance(rvalue,str)
 
     def tearDown(self):
         for post in ['dst/1-example.html','posts/1-titel.html']:
