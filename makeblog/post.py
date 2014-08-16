@@ -20,7 +20,6 @@ from datetime import datetime
 from pytz import timezone
 from re import compile, MULTILINE
 from os import access, F_OK
-from sys import exit
 from uuid import uuid4 as uuidgen
 import json
 
@@ -83,8 +82,6 @@ class Post(object):
         """
         self.title = title
         self.filename = newfile(slugify(self.title), draft)
-        if access(self.filename, F_OK):
-            exit("Sorry, file already exists, but why?")
         self.guid = str(uuidgen())
         self.author = self.blog.config['blog']['defaultauthor']
         self.categories = self.blog.config['blog']['categories']
@@ -93,7 +90,7 @@ class Post(object):
                                        self.date.strftime('%Y/%m/%d'),
                                        slugify(self.title))
         self.save()
-        print(self.filename)
+        return self.filename
 
     def save(self):
         with open(self.filename, "w") as f:
