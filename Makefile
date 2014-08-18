@@ -1,3 +1,5 @@
+venv = ~/.venvs/makeblog
+
 test:
 	python -m unittest
 
@@ -11,10 +13,9 @@ clean:
 	-rm -r htmlcov
 	-rm -r dst
 	-rm -r build
-	-rm -r runtime
 
-runtime:
-	virtualenv runtime/
-	runtime/bin/pip install -r requirements.txt
-	runtime/bin/pip install -r requirements_dev.txt
-	runtime/bin/python setup.py install
+virtualenv:
+	mkdir -p $(venv)
+	virtualenv $(venv)
+	$(venv)/bin/pip install -r requirements_dev.txt
+	$(venv)/bin/python setup.py install
