@@ -1,13 +1,13 @@
 venv = ~/.venvs/makeblog
 
 test:
-	python -m unittest
+	$(venv)/bin/python -m unittest
 
 coverage:
-	coverage erase
-	coverage run -m unittest
-	coverage report --include="makeblog*" --omit="makeblog/test_*"
-	coverage html --include="makeblog*" --omit="makeblog/test_*"
+	$(venv)/bin/coverage erase
+	$(venv)/bin/coverage run -m unittest
+	$(venv)/bin/coverage report --include="makeblog*" --omit="makeblog/test_*"
+	$(venv)/bin/coverage html --include="makeblog*" --omit="makeblog/test_*"
 
 clean:
 	-rm -r htmlcov
