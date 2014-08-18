@@ -6,8 +6,8 @@ test:
 coverage:
 	$(venv)/bin/coverage erase
 	$(venv)/bin/coverage run -m unittest
-	$(venv)/bin/coverage report --include="makeblog*" --omit="makeblog/test_*"
-	$(venv)/bin/coverage html --include="makeblog*" --omit="makeblog/test_*"
+	$(venv)/bin/coverage report
+	$(venv)/bin/coverage html
 
 clean:
 	-rm -r htmlcov
