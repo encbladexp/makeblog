@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from unittest import TestCase
 from os import mkdir, rmdir, unlink, access, F_OK
+from shutil import rmtree
 from jinja2 import Environment
 from jinja2.exceptions import UndefinedError
 from makeblog.templating import jinja, render
@@ -29,12 +30,8 @@ class TestTemplating(TestCase):
         self.assertIsInstance(jinja, Environment)
 
     def test_render(self):
-        self.assertRaises(UndefinedError, render, 'site.html', 'test.html')
+        render('site.html','test.html')
         self.assertTrue(access('dst/test.html', F_OK))
 
     def tearDown(self):
-        try:
-            unlink('dst/test.html')
-        except FileNotFoundError:
-            pass
-        rmdir('dst')
+        rmtree('dst')

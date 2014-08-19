@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from unittest import TestCase
-from os import rmdir, unlink
+from shutil import rmtree
 from makeblog.pygments import *
 
 CONTENT_WITHOUT_CODE = """
@@ -52,6 +52,4 @@ class TestPygments(TestCase):
         self.assertIsInstance(render(CONTENT_WITH_MISSING_LEXER),str)
 
     def tearDown(self):
-        unlink('dst/css/pygments_fruity.css')
-        rmdir('dst/css')
-        rmdir('dst')
+        rmtree('dst')

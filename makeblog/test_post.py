@@ -13,10 +13,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from unittest import TestCase
+from unittest import TestCase, skip
 from datetime import datetime
-from os import mkdir, rmdir, unlink, access, F_OK
+from os import mkdir
+from shutil import rmtree
 from makeblog.post import Post
+from makeblog.templating import jinja
 
 EXAMPLE_POST = '''
 ---
@@ -34,6 +36,21 @@ EXAMPLE_POST = '''
 <p>Testtext.</p>
 '''
 
+EXAMPLE_POST_WITHOUT_PERMALINK = '''
+---
+{
+ "date": "2008/10/05 19:39:00",
+ "author": "authorname",
+ "tags": "",
+ "guid": "d2564857-e604-406b-8db7-e72824ecf150",
+ "categories": "category1, category2",
+ "updated": "2009/01/06 20:12:51",
+ "title": "Example"
+}
+---
+<p>Testtext.</p>
+'''
+
 class TestBlog(object):
     """
     Simple Blog Instance for Unit Tests.
@@ -44,7 +61,9 @@ class TestBlog(object):
                                'dateformat':'%Y/%m/%d %H:%M:%S',
                                'url':'http://www.example.com',
                                'defaultauthor':'authorname',
-                               'categories':'category1, category2'
+                               'categories':'category1, category2',
+                               'name':'My TestBlog',
+                               'description':'My Description'
                               }
                       }
 
@@ -55,8 +74,10 @@ class TestPost(TestCase):
         mkdir('dst')
         mkdir('posts')
         mkdir('drafts')
-        with open('dst/1-example.html','w') as f:
+        with open('posts/1-example.html','w') as f:
             f.write(EXAMPLE_POST)
+        with open('posts/2-example.html','w') as f:
+            f.write(EXAMPLE_POST_WITHOUT_PERMALINK)
 
     def test_init(self):
         blog = TestBlog()
@@ -79,12 +100,17 @@ class TestPost(TestCase):
     def test_load(self):
         blog = TestBlog()
         post = Post(blog)
-        post.load('dst/1-example.html')
+        post.load('posts/1-example.html')
+
+    def test_load_without_permalink(self):
+        blog = TestBlog()
+        post = Post(blog)
+        post.load('posts/2-example.html')
 
     def test_save(self):
         blog = TestBlog()
         post = Post(blog)
-        post.load('dst/1-example.html')
+        post.load('posts/1-example.html')
         post.save()
 
     def test_new(self):
@@ -93,13 +119,15 @@ class TestPost(TestCase):
         rvalue = post.new('Titel')
         self.assertIsInstance(rvalue,str)
 
-    def tearDown(self):
-        for post in ['dst/1-example.html','posts/1-titel.html']:
-            if access(post, F_OK):
-                unlink(post)
-        rmdir('dst')
-        rmdir('posts')
-        rmdir('drafts')
+    def test_render(self):
+        blog = TestBlog()
+        post = Post(blog)
+        post.load('posts/1-example.html')
+        jinja.globals['blog'] = blog
+        jinja.globals['now'] = datetime.utcnow()
+        post.render()
 
-# FIXME: File for new() exists already?
-# TODO: render() not tested
+    def tearDown(self):
+        rmtree('dst')
+        rmtree('posts')
+        rmtree('drafts')
