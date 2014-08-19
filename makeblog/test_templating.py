@@ -30,6 +30,10 @@ class TestTemplating(TestCase):
         self.assertIsInstance(jinja, Environment)
 
     def test_render(self):
+        # Workaround for Python < 3.4
+        if 'blog' not in jinja.globals:
+            jinja.globals['blog'] = blog
+            jinja.globals['now'] = datetime.utcnow()
         render('site.html','test.html')
         self.assertTrue(access('dst/test.html', F_OK))
 
