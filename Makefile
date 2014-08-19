@@ -13,6 +13,8 @@ clean:
 	-rm -r htmlcov
 	-rm -r dst
 	-rm -r build
+	-rm -r posts
+	-rm -r drafts
 
 virtualenv:
 	mkdir -p $(venv)
