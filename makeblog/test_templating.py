@@ -15,9 +15,28 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from unittest import TestCase
 from os import mkdir, rmdir, unlink, access, F_OK
+from shutil import rmtree
+from datetime import datetime
 from jinja2 import Environment
 from jinja2.exceptions import UndefinedError
 from makeblog.templating import jinja, render
+
+
+class TestBlog(object):
+    """
+    Simple Blog Instance for Unit Tests.
+    """
+
+    def __init__(self):
+        self.config = {'blog':{'timezone':'Europe/Berlin',
+                               'dateformat':'%Y/%m/%d %H:%M:%S',
+                               'url':'http://www.example.com',
+                               'defaultauthor':'authorname',
+                               'categories':'category1, category2',
+                               'name':'My TestBlog',
+                               'description':'My Description'
+                              }
+                      }
 
 
 class TestTemplating(TestCase):
@@ -29,12 +48,12 @@ class TestTemplating(TestCase):
         self.assertIsInstance(jinja, Environment)
 
     def test_render(self):
-        self.assertRaises(UndefinedError, render, 'site.html', 'test.html')
+        # Workaround for Python < 3.4
+        if 'blog' not in jinja.globals:
+            jinja.globals['blog'] = TestBlog()
+            jinja.globals['now'] = datetime.utcnow()
+        render('site.html','test.html')
         self.assertTrue(access('dst/test.html', F_OK))
 
     def tearDown(self):
-        try:
-            unlink('dst/test.html')
-        except FileNotFoundError:
-            pass
-        rmdir('dst')
+        rmtree('dst')

@@ -1,0 +1,4 @@
+[run]
+branch = False
+source = makeblog/
+omit = makeblog/test_*
