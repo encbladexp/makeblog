@@ -1,7 +1,7 @@
 {% extends 'site.html' %}
 {% from 'post.html' import postrenderer %}
 {% block content %}
-{% for post in posts %}
-{{ postrenderer(post) }}
+{% for post in posts[:5] %}
+{{ postrenderer(post, length=None) }}
 {% endfor %}
 {% endblock %}

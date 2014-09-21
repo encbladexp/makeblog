@@ -161,7 +161,7 @@ class IndexRenderer(RenderPlugin):
 
     def render(self):
         # render index page
-        startposts = self.blog.posts[-5:]
+        startposts = self.blog.posts
         startposts.reverse()
         render('chronological.html', 'index.html', posts=startposts)
 
