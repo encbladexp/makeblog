@@ -5,7 +5,7 @@
 <a href="/category/{{ category }}">{{ category }}</a>
 {% endfor %}
 </div>
-{% if not length %}
+{% if length %}
 {{ post.content|truncate(length, False) }}
 <br><br>
 <a href="{{ post.permalink }}/" name="{{ post.slug }}" rel="bookmark" title="Permalink to „{{ post.title }}    “">Read all »</a>
