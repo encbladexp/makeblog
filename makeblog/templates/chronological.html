@@ -2,6 +2,6 @@
 {% from 'post.html' import postrenderer %}
 {% block content %}
 {% for post in posts %}
-{{ postrenderer(post) }}
+{{ postrenderer(post, length=None) }}
 {% endfor %}
 {% endblock %}
