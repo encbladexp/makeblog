@@ -4,9 +4,35 @@
 <h1>{{ author.nick }}</h1>
 <p>Der Author mit dem Nickname {{ author.nick }} trägt im wirklichen Leben den
 Namen {{ author.name }}.</p>
-<h2>Soziale Netzwerke / Kontakt</h2>
+{% if author.has_donation %}
 <h2>Spenden</h2>
+<p>Du kannst diesem Author spenden zukommen lassen, und zwar über folgende
+	Dienste:
+	{% if author.bitcoin %}
+	<a href="bitcoin:{{ author.bitcoin }}"><img src="/bitcoin.png">{{ author.bitcoin }}</a>
+	{% endif %}
+	{% if author.amazon %}
+	<a href="{{ author.amazon }}"><img src="/amazon.png"></a>
+	{% endif %}
+	{% if author.flattr %}
+	<a href="{{ author.flattr }}"><img src="/flattr.png"></a>
+	{% endif %}
+</p>
+{% endif %}
+{% if author.has_contact %}
 <h2>Kontakt</h2>
+<p>Der Autor ist über folgende Dienste erreichbar:
+	{% if author.googleplus %}
+	<a href="{{ author.googleplus }}"><img src="/gplus.png"></a>
+	{% endif %}
+	{% if author.twitter %}
+	<a href="{{ author.twitter }}"><img src="/twitter.png"></a>
+	{% endif %}
+	{% if author.mail %}
+	<a href="mailto:{{ author.mail }}"><img src="/mail.png"></a>
+	{% endif %}
+</p>
+{% endif %}
 <h2>Statistik</h2>
 <table>
 	{% if author.first_post %}
@@ -21,7 +47,7 @@ Namen {{ author.name }}.</p>
 	{% endif %}
 	<tr>
 		<th>Artikel Gesamt</th>
-		<td>{{ author.post_count }} (X.Y%)</td>
+		<td>{{ author.post_count }} ({{ author.post_percent|round(2) }}%)</td>
 	</tr>
 	<tr>
 		<th>Letzte 10 Artikel</th>

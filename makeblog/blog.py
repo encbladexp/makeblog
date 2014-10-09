@@ -100,6 +100,15 @@ class CountPostsAuthor(PreRenderPlugin):
             author.post_count = len(author.posts)
 
 
+class PercentPostsAuthor(PreRenderPlugin):
+    priority = 23
+
+    def run(self):
+        # calculate % of author posts
+        for author in self.blog.authors:
+            author.post_percent = 100/len(self.blog.posts)*author.post_count
+
+
 class FristLastAuthorPosts(PreRenderPlugin):
     priority = 23
 
