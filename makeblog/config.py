@@ -64,7 +64,7 @@ def writedefaultconfig():
     """
     Create a configuration with sane defaults.
     """
-    for directory in ('src', 'posts', 'drafts', 'authors'):
+    for directory in ('src', 'posts', 'drafts', 'authors','plugins'):
         if not exists(directory):
             makedirs(directory)
     if not access('config.json', F_OK):

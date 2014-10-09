@@ -19,10 +19,15 @@ from makeblog.blog import Blog
 from makeblog.post import Post
 from makeblog.config import readconfig, writedefaultconfig
 from makeblog.server import Server
+from makeblog.plugins import load_plugins
 from sys import exit
 
+# Parse cmdline args
 parse_args()
+# Read configuration
 config = readconfig()
+# Load all User created Plugins
+load_plugins('plugins')
 
 # Verify configuration exists and --init is not passed:
 if not config and not options.init:

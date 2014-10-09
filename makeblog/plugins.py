@@ -18,6 +18,18 @@
 # http://martyalchin.com/2008/jan/10/simple-plugin-framework/
 
 from operator import attrgetter
+from os import walk
+from importlib import import_module
+
+def load_plugins(path):
+    """
+    A small helper to load all plugins from a path.
+    """
+    for plugindir in walk(path):
+        for pluginfile in plugindir[2]:
+            if pluginfile.endswith('.py'):
+                plugin = "{}.{}".format(plugindir[0].replace('/','.'),plugin[:-3])
+                import_module(plugin)
 
 class PluginMount(type):
     def __init__(cls, name, bases, attrs):
