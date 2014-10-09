@@ -139,7 +139,7 @@ class CategorizePosts(PreRenderPlugin):
                 self.blog.categoryposts[category].append(post)
 
 
-class RsyncStaticPlugin(PreRenderPlugin):
+class RsyncStaticPlugin(PreRenderPlugin):# pragma: no cover
     priority = 50
 
     def run(self):
