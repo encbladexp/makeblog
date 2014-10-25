@@ -15,7 +15,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from unittest import TestCase, skip
 from os import rmdir, mkdir
-from makeblog.server import *
+from makeblog.server import Server
+
 
 class TestServer(TestCase):
 

@@ -33,7 +33,7 @@ class Server(object):
         self.httpd = TCPServerReusable(('127.0.0.1', 8000),
                                        SimpleHTTPRequestHandler)
 
-    def serve(self): # pragma: no cover
+    def serve(self):  # pragma: no cover
         print("Starting Webserver for http://127.0.0.1:8000/")
         try:
             self.httpd.serve_forever()

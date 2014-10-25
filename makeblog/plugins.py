@@ -21,6 +21,7 @@ from operator import attrgetter
 from os import walk
 from importlib import import_module
 
+
 def load_plugins(path):
     """
     A small helper to load all plugins from a path.
@@ -28,8 +29,10 @@ def load_plugins(path):
     for plugindir in walk(path):
         for pluginfile in plugindir[2]:
             if pluginfile.endswith('.py'):
-                plugin = "{}.{}".format(plugindir[0].replace('/','.'),plugin[:-3])
+                plugin = "{}.{}".format(plugindir[0].replace('/', '.'),
+                                        pluginfile[:-3])
                 import_module(plugin)
+
 
 class PluginMount(type):
     def __init__(cls, name, bases, attrs):
@@ -39,7 +42,8 @@ class PluginMount(type):
             cls.plugins.append(cls)
 
     def get_plugins(cls, *args, **kwargs):
-        return [p(*args, **kwargs) for p in sorted(cls.plugins,key=attrgetter('priority'))]
+        return [p(*args, **kwargs) for p in sorted(cls.plugins,
+                                                   key=attrgetter('priority'))]
 
 
 class PluginMixin(object):
@@ -61,13 +65,13 @@ class RunPluginMixin(object):
         pass
 
 
-class PreRenderPlugin(PluginMixin,RunPluginMixin,metaclass=PluginMount):
+class PreRenderPlugin(PluginMixin, RunPluginMixin, metaclass=PluginMount):
     pass
 
 
-class RenderPlugin(PluginMixin,RenderPluginMixin,metaclass=PluginMount):
+class RenderPlugin(PluginMixin, RenderPluginMixin, metaclass=PluginMount):
     pass
 
 
-class PostRenderPlugin(PluginMixin,RunPluginMixin,metaclass=PluginMount):
+class PostRenderPlugin(PluginMixin, RunPluginMixin, metaclass=PluginMount):
     pass

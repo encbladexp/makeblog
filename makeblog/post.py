@@ -13,13 +13,12 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from makeblog.tools import slugify, directorymaker, newfile
+from makeblog.tools import slugify, newfile
 from makeblog.pygments import pygmentify
 from makeblog.templating import render
 from datetime import datetime
 from pytz import timezone
 from re import compile, MULTILINE
-from os import access, F_OK
 from uuid import uuid4 as uuidgen
 import json
 
@@ -55,7 +54,7 @@ class Post(object):
         self.guid = header['guid']
         if header['categories']:
             self.categories = [category.strip() for category in
-                           header['categories'].split(',')]
+                               header['categories'].split(',')]
         self.date = timezone(self.blog.config['blog']['timezone']).\
             localize(datetime.strptime(header['date'],
                                        self.blog.config['blog']['dateformat']))
@@ -67,8 +66,8 @@ class Post(object):
                                       self.blog.config['blog']['dateformat']))
         if not self.permalink:
             self.permalink = '{}/{}/{}'.format(self.blog.config['blog']['url'],
-                                           self.date.strftime('%Y/%m/%d'),
-                                           slugify(self.title))
+                                               self.date.strftime('%Y/%m/%d'),
+                                               slugify(self.title))
         self.slug = header['slug'] if 'slug' in header else slugify(self.title)
         self._content = parts[2]
 
@@ -87,8 +86,8 @@ class Post(object):
         self.categories = self.blog.config['blog']['categories']
         self.updated = self.date
         self.permalink = '{}/{}/{}'.format(self.blog.config['blog']['url'],
-                                       self.date.strftime('%Y/%m/%d'),
-                                       slugify(self.title))
+                                           self.date.strftime('%Y/%m/%d'),
+                                           slugify(self.title))
         self.save()
         return self.filename
 
@@ -117,7 +116,7 @@ class Post(object):
     def render(self):
         blogurl = self.blog.config['blog']['url']
         dirname = self.permalink.replace('{}/'.format(blogurl), '')
-        render('article.html','{}/index.html'.format(dirname), post=self)
+        render('article.html', '{}/index.html'.format(dirname), post=self)
 
     @property
     @pygmentify

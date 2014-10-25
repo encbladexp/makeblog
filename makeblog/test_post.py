@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from unittest import TestCase, skip
+from unittest import TestCase
 from datetime import datetime
 from os import mkdir
 from shutil import rmtree
@@ -51,21 +51,22 @@ EXAMPLE_POST_WITHOUT_PERMALINK = '''
 <p>Testtext.</p>
 '''
 
+
 class TestBlog(object):
     """
     Simple Blog Instance for Unit Tests.
     """
 
     def __init__(self):
-        self.config = {'blog':{'timezone':'Europe/Berlin',
-                               'dateformat':'%Y/%m/%d %H:%M:%S',
-                               'url':'http://www.example.com',
-                               'defaultauthor':'authorname',
-                               'categories':'category1, category2',
-                               'name':'My TestBlog',
-                               'description':'My Description'
-                              }
-                      }
+        self.config = {'blog': {'timezone': 'Europe/Berlin',
+                                'dateformat': '%Y/%m/%d %H:%M:%S',
+                                'url': 'http://www.example.com',
+                                'defaultauthor': 'authorname',
+                                'categories': 'category1, category2',
+                                'name': 'My TestBlog',
+                                'description': 'My Description'
+                                }
+                       }
 
 
 class TestPost(TestCase):
@@ -74,15 +75,15 @@ class TestPost(TestCase):
         mkdir('dst')
         mkdir('posts')
         mkdir('drafts')
-        with open('posts/1-example.html','w') as f:
+        with open('posts/1-example.html', 'w') as f:
             f.write(EXAMPLE_POST)
-        with open('posts/2-example.html','w') as f:
+        with open('posts/2-example.html', 'w') as f:
             f.write(EXAMPLE_POST_WITHOUT_PERMALINK)
 
     def test_init(self):
         blog = TestBlog()
         post = Post(blog)
-        self.assertIsInstance(post.blog,TestBlog)
+        self.assertIsInstance(post.blog, TestBlog)
         self.assertIsInstance(post.date, datetime)
 
     def test_update(self):
@@ -95,7 +96,7 @@ class TestPost(TestCase):
         blog = TestBlog()
         post = Post(blog)
         post._content = 'Example Content'
-        self.assertIsInstance(post.content,str)
+        self.assertIsInstance(post.content, str)
 
     def test_load(self):
         blog = TestBlog()
@@ -117,7 +118,7 @@ class TestPost(TestCase):
         blog = TestBlog()
         post = Post(blog)
         rvalue = post.new('Titel')
-        self.assertIsInstance(rvalue,str)
+        self.assertIsInstance(rvalue, str)
 
     def test_render(self):
         blog = TestBlog()

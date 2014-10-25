@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from unittest import TestCase
 from shutil import rmtree
-from makeblog.pygments import *
+from makeblog.pygments import pygmentify
 
 CONTENT_WITHOUT_CODE = """
 This is content
@@ -47,9 +47,9 @@ class TestPygments(TestCase):
         def render(content):
             return content
 
-        self.assertIsInstance(render(CONTENT_WIHT_CODE),str)
-        self.assertIsInstance(render(CONTENT_WITHOUT_CODE),str)
-        self.assertIsInstance(render(CONTENT_WITH_MISSING_LEXER),str)
+        self.assertIsInstance(render(CONTENT_WIHT_CODE), str)
+        self.assertIsInstance(render(CONTENT_WITHOUT_CODE), str)
+        self.assertIsInstance(render(CONTENT_WITH_MISSING_LEXER), str)
 
     def tearDown(self):
         rmtree('dst')

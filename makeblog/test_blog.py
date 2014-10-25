@@ -17,7 +17,8 @@ from unittest import TestCase
 from os import mkdir
 from shutil import rmtree
 from datetime import datetime
-from makeblog.blog import *
+from makeblog.blog import Blog, LoadPosts, LoadAuthors, SortPosts, SortPostsAuthor,\
+    CountPostsAuthor, FristLastAuthorPosts
 from makeblog.config import DEFAULT_CONFIG
 
 EXAMPLE_POST = '''
@@ -36,52 +37,53 @@ EXAMPLE_POST = '''
 <p>Testtext.</p>
 '''
 
+
 class TestBlog(TestCase):
 
     def setUp(self):
-        for directory in ('posts','drafts'):
+        for directory in ('posts', 'drafts'):
             mkdir(directory)
 
     def test_init(self):
         b = Blog(None)
-        self.assertIsInstance(b.authors,list)
-        self.assertIsInstance(b.posts,list)
-        self.assertIsInstance(b.categoryposts,dict)
+        self.assertIsInstance(b.authors, list)
+        self.assertIsInstance(b.posts, list)
+        self.assertIsInstance(b.categoryposts, dict)
         self.assertIsNone(b.config)
         self.assertFalse(b.draft)
 
     def test_loadposts(self):
-        p =LoadPosts(Blog(DEFAULT_CONFIG))
+        p = LoadPosts(Blog(DEFAULT_CONFIG))
         p.run()
         # 0 Posts if not Posts in drafts/posts directory
-        self.assertEqual(len(p.blog.posts),0)
-        with open('posts/1-example.html','w') as f:
+        self.assertEqual(len(p.blog.posts), 0)
+        with open('posts/1-example.html', 'w') as f:
             f.write(EXAMPLE_POST)
         p.run()
         # 1 Posts if only 1 Post in posts
-        self.assertEqual(len(p.blog.posts),1)
+        self.assertEqual(len(p.blog.posts), 1)
         # Reset Posts to avoid duplicates
         p.blog.posts = []
-        with open('drafts/1-example.html','w') as f:
+        with open('drafts/1-example.html', 'w') as f:
             f.write(EXAMPLE_POST)
         p.run()
         # 1 Posts if both  drafts and posts has 1 Post but Draft Mode disabled
-        self.assertEqual(len(p.blog.posts),1)
+        self.assertEqual(len(p.blog.posts), 1)
         # Reset Posts again and enable draft mode
         p.blog.posts = []
         p.blog.draft = True
         p.run()
         # 2 Posts if both drafts and posts has 1 Post and Draft Mode enabled
-        self.assertEqual(len(p.blog.posts),2)
+        self.assertEqual(len(p.blog.posts), 2)
 
     def test_loadauthors(self):
         p = LoadAuthors(Blog(DEFAULT_CONFIG))
-        p.blog.config['authors'] = { 'testuser2':{'nick':'testuser2nick'},
-                                     'testuser1':{'nick':'testuser1nick'}
-                                   }
+        p.blog.config['authors'] = {'testuser2': {'nick': 'testuser2nick'},
+                                    'testuser1': {'nick': 'testuser1nick'}
+                                    }
         p.run()
-        self.assertEqual(p.blog.authors[0].nick,'testuser1nick')
-        self.assertEqual(p.blog.authors[1].nick,'testuser2nick')
+        self.assertEqual(p.blog.authors[0].nick, 'testuser1nick')
+        self.assertEqual(p.blog.authors[1].nick, 'testuser2nick')
 
     def test_sortposts(self):
         p = SortPosts(Blog(None))
@@ -91,11 +93,59 @@ class TestBlog(TestCase):
             def __init__(self, date):
                 self.date = date
 
-        p.blog.posts = [AbstractTestPost(datetime(2014, 1, 1)),AbstractTestPost(datetime(2013, 1, 1))]
+        p.blog.posts = [AbstractTestPost(datetime(2014, 1, 1)),
+                        AbstractTestPost(datetime(2013, 1, 1))]
         p.run()
-        self.assertEqual(p.blog.posts[0].date.year,2013)
-        self.assertEqual(p.blog.posts[1].date.year,2014)
+        self.assertEqual(p.blog.posts[0].date.year, 2013)
+        self.assertEqual(p.blog.posts[1].date.year, 2014)
+
+    def test_sortpostsauthor(self):
+        class AbstractTestPost(object):
+
+            def __init__(self, author):
+                self.author = author
+
+        class AbstractTestAuthor(object):
+
+            def __init__(self, nick):
+                self.nick = nick
+
+        p = SortPostsAuthor(Blog(None))
+        p.blog.authors = [AbstractTestAuthor('nick1'),
+                          AbstractTestAuthor('nick2')]
+        p.blog.posts = [AbstractTestPost('nick2'), AbstractTestPost('nick1')]
+        p.run()
+        for author in p.blog.authors:
+            self.assertEqual(author.nick, author.posts[0].author)
+
+    def test_countpostsauthor(self):
+        p = CountPostsAuthor(Blog(None))
+
+        class AbstractTestAuthor(object):
+
+            def __init__(self, posts):
+                self.posts = posts
+
+        p.blog.authors = [AbstractTestAuthor([0, 1]),
+                          AbstractTestAuthor([0, 1, 2])]
+        p.run()
+        self.assertEqual(p.blog.authors[0].post_count, 2)
+        self.assertEqual(p.blog.authors[1].post_count, 3)
+
+    def test_firstlastauthorposts(self):
+        class AbstractTestAuthor(object):
+
+            def __init__(self, i):
+                self.posts = list(range(i))
+
+        p = FristLastAuthorPosts(Blog(None))
+        p.blog.authors = [AbstractTestAuthor(0), AbstractTestAuthor(5)]
+        p.run()
+        self.assertIsNone(p.blog.authors[0].first_post)
+        self.assertIsNone(p.blog.authors[0].last_post)
+        self.assertEqual(p.blog.authors[1].first_post, 0)
+        self.assertEqual(p.blog.authors[1].last_post, 4)
 
     def tearDown(self):
-        for directory in ('posts','drafts'):
+        for directory in ('posts', 'drafts'):
             rmtree(directory)
