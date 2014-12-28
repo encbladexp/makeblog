@@ -23,7 +23,6 @@ class TestServer(TestCase):
     def setUp(self):
         mkdir('dst')
 
-    @skip('FIXME')
     def test_server_init(self):
         s = Server()
         self.assertIsInstance(s, Server)

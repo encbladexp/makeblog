@@ -32,6 +32,7 @@ class Server(object):
         chdir('dst/')
         self.httpd = TCPServerReusable(('127.0.0.1', 8000),
                                        SimpleHTTPRequestHandler)
+        chdir('..')
 
     def serve(self):  # pragma: no cover
         print("Starting Webserver for http://127.0.0.1:8000/")
