@@ -55,13 +55,13 @@ class PluginMixin(object):
 
 class RenderPluginMixin(object):
 
-    def render(self):
+    def render(self):  # pragma: no cover
         pass
 
 
 class RunPluginMixin(object):
 
-    def run(self):
+    def run(self):  # pragma: no cover
         pass
 
 
