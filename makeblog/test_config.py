@@ -41,7 +41,7 @@ class TestWritedefaultconfig(TestCase):
 
     def tearDown(self):
         unlink('config.json')
-        for directory in ('src', 'posts', 'drafts', 'authors'):
+        for directory in ('src', 'posts', 'drafts', 'authors','plugins'):
             rmdir(directory)
 
 
