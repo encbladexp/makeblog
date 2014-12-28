@@ -18,7 +18,7 @@ from os import mkdir
 from shutil import rmtree
 from datetime import datetime
 from makeblog.blog import Blog, LoadPosts, LoadAuthors, SortPosts, SortPostsAuthor,\
-    CountPostsAuthor, FristLastAuthorPosts
+    CountPostsAuthor, FristLastAuthorPosts, PercentPostsAuthor
 from makeblog.config import DEFAULT_CONFIG
 
 EXAMPLE_POST = '''
@@ -145,6 +145,24 @@ class TestBlog(TestCase):
         self.assertIsNone(p.blog.authors[0].last_post)
         self.assertEqual(p.blog.authors[1].first_post, 0)
         self.assertEqual(p.blog.authors[1].last_post, 4)
+
+    def test_percentpostsauthor(self):
+        class AbstractTestAuthor(object):
+
+            def __init__(self, post_count):
+                self.post_count = post_count
+
+        class AbstractTestBlog(object):
+
+            def __init__(self, num_posts, authors):
+                self.posts = list(range(num_posts))
+                self.authors = authors
+
+        b = AbstractTestBlog(100, [AbstractTestAuthor(10),AbstractTestAuthor(50)])
+        p = PercentPostsAuthor(b)
+        p.run()
+        self.assertEqual(b.authors[0].post_percent, 10)
+        self.assertEqual(b.authors[1].post_percent, 50)
 
     def tearDown(self):
         for directory in ('posts', 'drafts'):
