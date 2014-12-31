@@ -37,6 +37,7 @@ class Server(object):
     def serve(self):  # pragma: no cover
         print("Starting Webserver for http://127.0.0.1:8000/")
         try:
+            chdir('dst/')
             self.httpd.serve_forever()
         except KeyboardInterrupt:
             exit()
