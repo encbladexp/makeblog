@@ -21,7 +21,7 @@
     </author>
     <title type="html"><![CDATA[{{post.title}}]]></title>
     <link rel="alternate" type="text/html" href="{{ post.permalink }}/" />
-    <id>{{ post.permalink }}</id>
+    <id>{{ post.guid }}</id>
     <updated>{{post.updated.strftime("%Y-%m-%dT%H:%M:%SZ")}}</updated>
     <published>{{post.date.strftime("%Y-%m-%dT%H:%M:%SZ")}}</published>
 {% for category in post.categories %}
