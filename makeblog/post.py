@@ -51,7 +51,8 @@ class Post(object):
         self.title = header['title']
         if 'permalink' in header:
             self.permalink = header['permalink']
-        self.guid = header['guid']
+        guid = header['guid']
+        self.guid = guid if guid.startswith('tag:') else 'urn:uuid:{}'.format(guid)
         if header['categories']:
             self.categories = [category.strip() for category in
                                header['categories'].split(',')]

@@ -51,6 +51,22 @@ EXAMPLE_POST_WITHOUT_PERMALINK = '''
 <p>Testtext.</p>
 '''
 
+EXAMPLE_POST_WITH_GUID_TAG = '''
+---
+{
+ "date": "2008/10/04 19:39:00",
+ "author": "authorname",
+ "tags": "",
+ "guid": "tag:some-old-content-from-zine",
+ "categories": "category1, category2",
+ "permalink": "http://www.example.com/2009/1/6/example",
+ "updated": "2009/01/06 20:12:51",
+ "title": "Example"
+}
+---
+<p>Testtext.</p>
+'''
+
 
 class TestBlog(object):
     """
@@ -79,6 +95,8 @@ class TestPost(TestCase):
             f.write(EXAMPLE_POST)
         with open('posts/2-example.html', 'w') as f:
             f.write(EXAMPLE_POST_WITHOUT_PERMALINK)
+        with open('posts/3-example.html', 'w') as f:
+            f.write(EXAMPLE_POST_WITH_GUID_TAG)
 
     def test_init(self):
         blog = TestBlog()
@@ -127,6 +145,15 @@ class TestPost(TestCase):
         jinja.globals['blog'] = blog
         jinja.globals['now'] = datetime.utcnow()
         post.render()
+
+    def test_uuid(self):
+        blog = TestBlog()
+        post_uuid = Post(blog)
+        post_uuid.load('posts/1-example.html')
+        self.assertEqual(post_uuid.guid, 'urn:uuid:beba81bf-9ac1-4795-9569-c1bbd876677f')
+        post_tag = Post(blog)
+        post_tag.load('posts/3-example.html')
+        self.assertEqual(post_tag.guid, 'tag:some-old-content-from-zine')
 
     def tearDown(self):
         rmtree('dst')
