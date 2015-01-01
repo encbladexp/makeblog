@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # yaml2json-upgrade.py - Upgrades Posts/Drafts from YAML to JSON
-# Copyright (C) 2013-2014 Stefan J. Betz <info@stefan-betz.net>
+# Copyright (C) 2013-2015 Stefan J. Betz <info@stefan-betz.net>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
