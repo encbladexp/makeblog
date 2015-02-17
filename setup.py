@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # setup.py - Installs makeblog
-# Copyright (C) 2013-2014 Stefan J. Betz <info@stefan-betz.net>
+# Copyright (C) 2013-2015 Stefan J. Betz <info@stefan-betz.net>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 from distutils.core import setup
 
 setup(name='makeblog',
-      version='0.0.4',
+      version='0.0.5',
       description='A simple offline Blog.',
       author='Stefan J. Betz',
       author_email='info@stefan-betz.net',

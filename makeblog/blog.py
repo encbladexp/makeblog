@@ -1,5 +1,5 @@
 # makeblog - A simple offline Blog.
-# Copyright (C) 2013-2014 Stefan J. Betz <info@stefan-betz.net>
+# Copyright (C) 2013-2015 Stefan J. Betz <info@stefan-betz.net>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ from makeblog.post import Post
 from makeblog.author import Author
 from makeblog.templating import jinja, render
 from makeblog.plugins import PluginMount, PreRenderPlugin, RenderPlugin,\
-        PostRenderPlugin
+    PostRenderPlugin
 from datetime import datetime
 from operator import attrgetter
 from os import listdir, system, walk
@@ -31,7 +31,7 @@ class Blog(object):
         self.authors = []
         self.draft = False
 
-    def build(self, draft=False): # pragma: no cover
+    def build(self, draft=False):  # pragma: no cover
         # config
         jinja.globals['blog'] = self
         jinja.globals['now'] = datetime.utcnow()
@@ -69,7 +69,7 @@ class LoadAuthors(PreRenderPlugin):
     def run(self):
         # load all authors
         self.blog.authors = sorted(
-            [Author(self.blog.config['authors'][item])\
+            [Author(self.blog.config['authors'][item])
              for item in self.blog.config['authors'].keys()],
             key=attrgetter('nick'))
 
@@ -148,7 +148,7 @@ class CategorizePosts(PreRenderPlugin):
                 self.blog.categoryposts[category].append(post)
 
 
-class RsyncStaticPlugin(PreRenderPlugin):# pragma: no cover
+class RsyncStaticPlugin(PreRenderPlugin):  # pragma: no cover
     priority = 50
 
     def run(self):
@@ -275,4 +275,4 @@ class AuthorPageRenderer(RenderPlugin):
     def render(self):
         # render author pages
         for author in self.blog.authors:
-            render('author.html','author/{}/index.html'.format(author.nick), author=author)
+            render('author.html', 'author/{}/index.html'.format(author.nick), author=author)

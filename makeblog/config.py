@@ -1,5 +1,5 @@
 # makeblog - A simple offline Blog.
-# Copyright (C) 2013-2014 Stefan J. Betz <info@stefan-betz.net>
+# Copyright (C) 2013-2015 Stefan J. Betz <info@stefan-betz.net>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -64,11 +64,12 @@ def writedefaultconfig():
     """
     Create a configuration with sane defaults.
     """
-    for directory in ('src', 'posts', 'drafts', 'authors','plugins'):
+    for directory in ('src', 'posts', 'drafts', 'authors', 'plugins'):
         if not exists(directory):
             makedirs(directory)
     if not access('config.json', F_OK):
         with open('config.json', 'w') as f:
-            json.dump(DEFAULT_CONFIG, f, indent=1, ensure_ascii=False, sort_keys=True)
+            json.dump(DEFAULT_CONFIG, f, indent=1, ensure_ascii=False,
+                      sort_keys=True)
         return False
     return True

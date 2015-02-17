@@ -1,5 +1,5 @@
 # makeblog - A simple offline Blog.
-# Copyright (C) 2013-2014 Stefan J. Betz <info@stefan-betz.net>
+# Copyright (C) 2013-2015 Stefan J. Betz <info@stefan-betz.net>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,11 +14,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from unittest import TestCase
-from os import mkdir, rmdir, unlink, access, F_OK
+from os import mkdir, access, F_OK
 from shutil import rmtree
 from datetime import datetime
 from jinja2 import Environment
-from jinja2.exceptions import UndefinedError
 from makeblog.templating import jinja, render
 
 
@@ -28,15 +27,15 @@ class TestBlog(object):
     """
 
     def __init__(self):
-        self.config = {'blog':{'timezone':'Europe/Berlin',
-                               'dateformat':'%Y/%m/%d %H:%M:%S',
-                               'url':'http://www.example.com',
-                               'defaultauthor':'authorname',
-                               'categories':'category1, category2',
-                               'name':'My TestBlog',
-                               'description':'My Description'
-                              }
-                      }
+        self.config = {'blog': {'timezone': 'Europe/Berlin',
+                                'dateformat': '%Y/%m/%d %H:%M:%S',
+                                'url': 'http://www.example.com',
+                                'defaultauthor': 'authorname',
+                                'categories': 'category1, category2',
+                                'name': 'My TestBlog',
+                                'description': 'My Description'
+                                }
+                       }
 
 
 class TestTemplating(TestCase):
@@ -52,7 +51,7 @@ class TestTemplating(TestCase):
         if 'blog' not in jinja.globals:
             jinja.globals['blog'] = TestBlog()
             jinja.globals['now'] = datetime.utcnow()
-        render('site.html','test.html')
+        render('site.html', 'test.html')
         self.assertTrue(access('dst/test.html', F_OK))
 
     def tearDown(self):

@@ -1,5 +1,5 @@
 # makeblog - A simple offline Blog.
-# Copyright (C) 2013-2014 Stefan J. Betz <info@stefan-betz.net>
+# Copyright (C) 2013-2015 Stefan J. Betz <info@stefan-betz.net>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ class TestWritedefaultconfig(TestCase):
 
     def tearDown(self):
         unlink('config.json')
-        for directory in ('src', 'posts', 'drafts', 'authors'):
+        for directory in ('src', 'posts', 'drafts', 'authors','plugins'):
             rmdir(directory)
 
 

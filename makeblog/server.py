@@ -1,5 +1,5 @@
 # makeblog - A simple offline Blog.
-# Copyright (C) 2013-2014 Stefan J. Betz <info@stefan-betz.net>
+# Copyright (C) 2013-2015 Stefan J. Betz <info@stefan-betz.net>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,10 +32,12 @@ class Server(object):
         chdir('dst/')
         self.httpd = TCPServerReusable(('127.0.0.1', 8000),
                                        SimpleHTTPRequestHandler)
+        chdir('..')
 
-    def serve(self): # pragma: no cover
+    def serve(self):  # pragma: no cover
         print("Starting Webserver for http://127.0.0.1:8000/")
         try:
+            chdir('dst/')
             self.httpd.serve_forever()
         except KeyboardInterrupt:
             exit()

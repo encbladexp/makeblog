@@ -1,5 +1,5 @@
 # makeblog - A simple offline Blog.
-# Copyright (C) 2013-2014 Stefan J. Betz <info@stefan-betz.net>
+# Copyright (C) 2013-2015 Stefan J. Betz <info@stefan-betz.net>
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -15,14 +15,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from unittest import TestCase, skip
 from os import rmdir, mkdir
-from makeblog.server import *
+from makeblog.server import Server
+
 
 class TestServer(TestCase):
 
     def setUp(self):
         mkdir('dst')
 
-    @skip('FIXME')
     def test_server_init(self):
         s = Server()
         self.assertIsInstance(s, Server)

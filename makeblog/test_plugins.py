@@ -14,42 +14,28 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from unittest import TestCase
+from os import mkdir
 from shutil import rmtree
-from makeblog.pygments import pygmentify
-
-CONTENT_WITHOUT_CODE = """
-This is content
-without any code.
-"""
-
-CONTENT_WIHT_CODE = """
-This is content
-$$code(lang=sh)
-#!/bin/bash
-echo "bla"
-$$/code
-with code in it.
-"""
-
-CONTENT_WITH_MISSING_LEXER = """
-This content has a missing lexer
-$$code(lang=nerverexisting)
-bla
-$$/code
-"""
+from makeblog.plugins import load_plugins, PluginMount, PreRenderPlugin, PostRenderPlugin, RenderPlugin
 
 
-class TestPygments(TestCase):
+class TestPluginMount(TestCase):
 
-    def test_pygmentify(self):
+    def test_get_plugins(self):
+        self.assertIsInstance(PluginMount.get_plugins(PreRenderPlugin, None), list)
+        self.assertIsInstance(PluginMount.get_plugins(PostRenderPlugin, None), list)
+        self.assertIsInstance(PluginMount.get_plugins(RenderPlugin, None), list)
 
-        @pygmentify
-        def render(content):
-            return content
 
-        self.assertIsInstance(render(CONTENT_WIHT_CODE), str)
-        self.assertIsInstance(render(CONTENT_WITHOUT_CODE), str)
-        self.assertIsInstance(render(CONTENT_WITH_MISSING_LEXER), str)
+class TestPluginLoader(TestCase):
+
+    def setUp(self):
+        mkdir('plugins')
+        with open('plugins/test.py','w') as f:
+            f.write('')
+
+    def test_load_plugins(self):
+        load_plugins('plugins')
 
     def tearDown(self):
-        rmtree('dst')
+        rmtree('plugins')
