@@ -1,0 +1,5 @@
+<div class='small'>{{post.date.strftime("%Y-%m-%d %H:%M")}} | categories: 
+{% for category in post.categories %}
+<a href="/category/{{ category }}">{{ category }}</a>
+{% endfor %}
+</div>

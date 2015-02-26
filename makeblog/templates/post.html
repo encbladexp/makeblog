@@ -1,13 +1,9 @@
 {% macro postrenderer(post, length=None) %}
-<h1 class='bottom'><a href="{{ post.permalink }}/" name="{{ post.slug }}" rel="bookmark" title="Permanent Link to {{ post.title }}">{{post.title}}</a></h1>
-<div class='quiet'>{{post.date.strftime("%Y-%m-%d %H:%M")}} | categories: 
-{% for category in post.categories %}
-<a href="/category/{{ category }}">{{ category }}</a>
-{% endfor %}
-</div>
+{% include "post_title.html" %}
+{% include "post_header.html" %}
 {% if length %}
 {{ post.content|truncate(length, False) }}
-<br><br>
+<br>
 <a href="{{ post.permalink }}/" name="{{ post.slug }}" rel="bookmark" title="Permalink to „{{ post.title }}    “">Read all »</a>
 {% else %}
 {{ post.content }}
