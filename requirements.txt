@@ -1,3 +1,4 @@
+--no-binary MarkupSafe
 Jinja2>=2.7.1
 Pygments>=1.6
 pytz>=2013b
