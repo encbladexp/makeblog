@@ -30,8 +30,8 @@ code_re = compile(
 
 
 def pygments_css(formatter):
-    with open(directorymaker('css/pygments_fruity.css'), "w") as f:
-        f.write(formatter.get_style_defs('.pygments_fruity'))
+    with open(directorymaker('css/pygments.css'), "w") as f:
+        f.write(formatter.get_style_defs('.pygments_default'))
 
 
 def highlight_code(code, language, formatter):
@@ -53,8 +53,8 @@ def pygmentify(func):
             if args:
                 if 'lang' in args:
                     lang = args.strip('(').strip(')').split('=')[1]
-            formatter = HtmlFormatter(cssclass='pygments_fruity',
-                                      style='fruity')
+            formatter = HtmlFormatter(cssclass='pygments_default',
+                                      style='default')
             pygments_css(formatter)
             substitutions[match.group()] = highlight_code(match.group('code'),
                                                           lang, formatter)
