@@ -54,6 +54,8 @@ def slugify(text):
             slug = slug + SLUG_REPLACE[char]
         elif char in SLUG_ITEMS:
             slug = slug + char
+    while '--' in slug:
+        slug = slug.replace('--', '-')
     return slug
 
 
