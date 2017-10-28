@@ -1,6 +1,10 @@
 Changes
 =======
 
+Release 0.0.7
+-------------
+* Removed tools/yaml2json-upgrade.py
+
 Release 0.0.6
 -------------
 * Explicite pinned all requirements
