@@ -13,7 +13,7 @@ required stuff. Mostly inspired by /dev/null
 
 ## Setup
 
-    pip install -r requirements.txt
+    pip install -r requirements/production.txt
     python setup.py install
 
 ## Usage
