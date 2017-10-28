@@ -23,7 +23,7 @@ setup(name='makeblog',
       author='Stefan J. Betz',
       author_email='info@stefan-betz.net',
       url='https://github.com/encbladexp/makeblog',
-      scripts=['makeblog-bin'],
+      scripts=['makeblogctl'],
       packages=['makeblog'],
       package_data={'makeblog': ['templates/*.html']}
       )
