@@ -1,5 +1,6 @@
-# makeblog [![Build Status](https://travis-ci.org/encbladexp/makeblog.svg?branch=master)](https://travis-ci.org/encbladexp/makeblog)
-
+# makeblog
+[![Build Status](https://travis-ci.org/encbladexp/makeblog.svg?branch=master)](https://travis-ci.org/encbladexp/makeblog)
+[![Requirements Status](https://requires.io/github/encbladexp/makeblog/requirements.svg?branch=master)](https://requires.io/github/encbladexp/makeblog/requirements/?branch=master)
 
 A very simple solution for static Blogs without PHP,MySQL and other dynamic not
 required stuff. Mostly inspired by /dev/null
