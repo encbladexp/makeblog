@@ -1,4 +1,4 @@
 --no-binary MarkupSafe
-Jinja2>=2.7.1
-Pygments>=1.6
-pytz>=2013b
+Jinja2==2.9.6
+Pygments==2.2.0
+pytz==2017.2
