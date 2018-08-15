@@ -1,11 +1,10 @@
 language: python
+dist: xenial
 python:
-  - "3.3"
-  - "3.4"
   - "3.5"
   - "3.6"
+  - "3.7"
 install:
-  - pip install --upgrade pip
-  - pip install -r requirements/development.txt
-  - python setup.py install
-script: python -m unittest
+  - pip install --upgrade pip pipenv
+  - pipenv install --three --dev
+script: pipenv run python -m unittest

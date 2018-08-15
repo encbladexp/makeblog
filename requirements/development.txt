@@ -1,6 +1,0 @@
--r production.txt
-
---no-binary coverage
-bumpversion==0.5.3
-coverage==4.4.1
-flake8==3.5.0
