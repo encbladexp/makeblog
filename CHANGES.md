@@ -4,6 +4,10 @@ Changes
 Release 0.0.7
 -------------
 * Removed tools/yaml2json-upgrade.py
+* Switched from requirements.txt to Pipfile
+* Dropped support for Python <=3.4
+* Add support for Python 3.7
+* Updated requirements
 
 Release 0.0.6
 -------------
