@@ -1,0 +1,18 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+pytz = "==2017.2"
+"Jinja2" = "==2.9.6"
+Pygments = "==2.2.0"
+makeblog = {editable = true, path = "."}
+
+[dev-packages]
+pytz = "==2017.2"
+bumpversion = "==0.5.3"
+coverage = "==4.4.1"
+"flake8" = "==3.5.0"
+"Jinja2" = "==2.9.6"
+Pygments = "==2.2.0"
