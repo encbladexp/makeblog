@@ -7,17 +7,23 @@ required stuff. Mostly inspired by /dev/null
 
 ## Requirements
 
-* Python >= 3.3
+* Python >= 3.5
 * Jinja 2 >= 2.7
 * Pygments
 * PyTZ
 
-## Setup
+## Setup / Update
 
-    pip install -r requirements/production.txt
-    python setup.py install
+    pipenv install
 
 ## Usage
+
+Enable the makeblog pipenv in the current shell:
+
+    pipenv shell
+
+Now switch to your blog's root directory or an empty directory for a new blog, and lets the
+magic begin…
 
 Create a new Blog:
 
