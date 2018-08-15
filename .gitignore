@@ -1,3 +1,5 @@
 .nfs*
 *.pyc
 build/*
+htmlcov/*
+*.egg-info/*
