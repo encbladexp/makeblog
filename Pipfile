@@ -4,12 +4,12 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pytz = "==2018.5"
+pytz = "==2018.7"
 "Jinja2" = "==2.10"
-Pygments = "==2.2.0"
-makeblog = {editable = true, path = "."}
+Pygments = "==2.3.1"
+makeblog = {editable = true,path = "."}
 
 [dev-packages]
 bumpversion = "==0.5.3"
-coverage = "==4.5.1"
-"flake8" = "==3.5.0"
+coverage = "==4.5.2"
+flake8 = "==3.6.0"
