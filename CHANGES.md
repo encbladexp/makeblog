@@ -1,6 +1,12 @@
 Changes
 =======
 
+Release 0.0.8
+-------------
+* Updated requirements
+* We have 2019 now
+* Removed .coverage file
+
 Release 0.0.7
 -------------
 * Removed tools/yaml2json-upgrade.py
