@@ -29,15 +29,14 @@ class Server(object):
     """
 
     def __init__(self):
-        chdir('dst/')
-        self.httpd = TCPServerReusable(('127.0.0.1', 8000),
-                                       SimpleHTTPRequestHandler)
-        chdir('..')
+        chdir("dst/")
+        self.httpd = TCPServerReusable(("127.0.0.1", 8000), SimpleHTTPRequestHandler)
+        chdir("..")
 
     def serve(self):  # pragma: no cover
         print("Starting Webserver for http://127.0.0.1:8000/")
         try:
-            chdir('dst/')
+            chdir("dst/")
             self.httpd.serve_forever()
         except KeyboardInterrupt:
             exit()

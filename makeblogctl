@@ -27,11 +27,11 @@ parse_args()
 # Read configuration
 config = readconfig()
 # Load all User created Plugins
-load_plugins('plugins')
+load_plugins("plugins")
 
 # Verify configuration exists and --init is not passed:
 if not config and not options.init:
-    exit('Sorry, no configuration file found.')
+    exit("Sorry, no configuration file found.")
 
 if options.title:
     b = Blog(config)

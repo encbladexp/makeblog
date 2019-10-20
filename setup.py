@@ -17,13 +17,14 @@
 
 from distutils.core import setup
 
-setup(name='makeblog',
-      version='0.0.8',
-      description='A simple offline Blog.',
-      author='Stefan J. Betz',
-      author_email='info@stefan-betz.net',
-      url='https://github.com/encbladexp/makeblog',
-      scripts=['makeblogctl'],
-      packages=['makeblog'],
-      package_data={'makeblog': ['templates/*.html']}
-      )
+setup(
+    name="makeblog",
+    version="0.0.8",
+    description="A simple offline Blog.",
+    author="Stefan J. Betz",
+    author_email="info@stefan-betz.net",
+    url="https://github.com/encbladexp/makeblog",
+    scripts=["makeblogctl"],
+    packages=["makeblog"],
+    package_data={"makeblog": ["templates/*.html"]},
+)

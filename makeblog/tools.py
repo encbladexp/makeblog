@@ -18,26 +18,65 @@ from os.path import dirname, exists
 from re import compile
 from argparse import ArgumentParser, Namespace
 
-SLUG_ITEMS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k',
-              'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
-              'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6',
-              '7', '8', '9', '-', ':', '_']
-SLUG_REPLACE = {' ': '-', 'ß': 'ss', 'ü': 'ue', 'ö': 'oe', 'ä': 'ae'}
-SLUG_EXCLUDE = [':']
+SLUG_ITEMS = [
+    "a",
+    "b",
+    "c",
+    "d",
+    "e",
+    "f",
+    "g",
+    "h",
+    "i",
+    "j",
+    "k",
+    "l",
+    "m",
+    "n",
+    "o",
+    "p",
+    "q",
+    "r",
+    "s",
+    "t",
+    "u",
+    "v",
+    "w",
+    "x",
+    "y",
+    "z",
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "-",
+    ":",
+    "_",
+]
+SLUG_REPLACE = {" ": "-", "ß": "ss", "ü": "ue", "ö": "oe", "ä": "ae"}
+SLUG_EXCLUDE = [":"]
 
-opts = ArgumentParser(prog='makeblog', description='A simple offline Blog.')
-opts.add_argument('-t', '--title', metavar='TITLE',
-                  help='Create a new Article with Title')
-opts.add_argument('-d', '--draft', action='store_true',
-                  help='Draft mode for --build and --title')
-opts.add_argument('-b', '--build', action='store_true',
-                  help='Build this Blog')
-opts.add_argument('-s', '--serve', action='store_true',
-                  help='Serve this Blog')
-opts.add_argument('-i', '--init', action='store_true',
-                  help='Create required directories')
-opts.add_argument('-u', '--update', metavar='FILENAME',
-                  help='Update Timestamp from Blog file')
+opts = ArgumentParser(prog="makeblog", description="A simple offline Blog.")
+opts.add_argument(
+    "-t", "--title", metavar="TITLE", help="Create a new Article with Title"
+)
+opts.add_argument(
+    "-d", "--draft", action="store_true", help="Draft mode for --build and --title"
+)
+opts.add_argument("-b", "--build", action="store_true", help="Build this Blog")
+opts.add_argument("-s", "--serve", action="store_true", help="Serve this Blog")
+opts.add_argument(
+    "-i", "--init", action="store_true", help="Create required directories"
+)
+opts.add_argument(
+    "-u", "--update", metavar="FILENAME", help="Update Timestamp from Blog file"
+)
 options = Namespace()
 
 
@@ -45,17 +84,17 @@ def slugify(text):
     """
     Slugifies a string.
     """
-    slug = ''
+    slug = ""
     lowered = text.lower()
     for excludedchar in SLUG_EXCLUDE:
-        lowered = lowered.replace(excludedchar, '')
+        lowered = lowered.replace(excludedchar, "")
     for char in lowered:
         if char in SLUG_REPLACE:
             slug = slug + SLUG_REPLACE[char]
         elif char in SLUG_ITEMS:
             slug = slug + char
-    while '--' in slug:
-        slug = slug.replace('--', '-')
+    while "--" in slug:
+        slug = slug.replace("--", "-")
     return slug
 
 
@@ -65,11 +104,16 @@ def newfile(slug, draft=False):
     drafts/.
     """
     idre = compile("([0-9]*).*")
-    dirs = listdir('posts') + listdir('drafts')
-    files = sorted([int(idre.match(filename).group(1)) for filename in dirs
-                    if idre.match(filename)])
-    fileid = 1 if len(files) == 0 else files[-1]+1
-    articletype = 'drafts' if draft else 'posts'
+    dirs = listdir("posts") + listdir("drafts")
+    files = sorted(
+        [
+            int(idre.match(filename).group(1))
+            for filename in dirs
+            if idre.match(filename)
+        ]
+    )
+    fileid = 1 if len(files) == 0 else files[-1] + 1
+    articletype = "drafts" if draft else "posts"
     return "{}/{:d}-{}.html".format(articletype, fileid, slug)
 
 
@@ -77,7 +121,7 @@ def directorymaker(path):
     """
     Creates directories required for path.
     """
-    path = 'dst/{}'.format(path)
+    path = "dst/{}".format(path)
     directories = dirname(path)
     if not exists(directories):
         makedirs(directories)

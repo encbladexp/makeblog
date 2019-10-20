@@ -34,8 +34,9 @@ class Post(object):
         self.slug = None
         self.guid = None
         self.categories = []
-        self.date = timezone(self.blog.config['blog']['timezone']).\
-            localize(datetime.now())
+        self.date = timezone(self.blog.config["blog"]["timezone"]).localize(
+            datetime.now()
+        )
         self.updated = None
         self._content = None
         self.next = None
@@ -47,34 +48,39 @@ class Post(object):
         with open(self.filename) as f:
             parts = Post.json_sep.split(f.read(), maxsplit=2)
         header = json.loads(parts[1])
-        self.author = header['author']
-        self.title = header['title']
-        if 'permalink' in header:
-            self.permalink = header['permalink']
-        guid = header['guid']
-        self.guid = guid if guid.startswith('tag:') else 'urn:uuid:{}'.format(guid)
-        if header['categories']:
-            self.categories = [category.strip() for category in
-                               header['categories'].split(',')]
-        self.date = timezone(self.blog.config['blog']['timezone']).\
-            localize(datetime.strptime(header['date'],
-                                       self.blog.config['blog']['dateformat']))
+        self.author = header["author"]
+        self.title = header["title"]
+        if "permalink" in header:
+            self.permalink = header["permalink"]
+        guid = header["guid"]
+        self.guid = guid if guid.startswith("tag:") else "urn:uuid:{}".format(guid)
+        if header["categories"]:
+            self.categories = [
+                category.strip() for category in header["categories"].split(",")
+            ]
+        self.date = timezone(self.blog.config["blog"]["timezone"]).localize(
+            datetime.strptime(header["date"], self.blog.config["blog"]["dateformat"])
+        )
         self.updated = self.date
-        if 'updated' in header:
-            self.updated = timezone(self.blog.config['blog']['timezone']).\
-                localize(
-                    datetime.strptime(header['updated'],
-                                      self.blog.config['blog']['dateformat']))
+        if "updated" in header:
+            self.updated = timezone(self.blog.config["blog"]["timezone"]).localize(
+                datetime.strptime(
+                    header["updated"], self.blog.config["blog"]["dateformat"]
+                )
+            )
         if not self.permalink:
-            self.permalink = '{}/{}/{}'.format(self.blog.config['blog']['url'],
-                                               self.date.strftime('%Y/%m/%d'),
-                                               slugify(self.title))
-        self.slug = header['slug'] if 'slug' in header else slugify(self.title)
+            self.permalink = "{}/{}/{}".format(
+                self.blog.config["blog"]["url"],
+                self.date.strftime("%Y/%m/%d"),
+                slugify(self.title),
+            )
+        self.slug = header["slug"] if "slug" in header else slugify(self.title)
         self._content = parts[2]
 
     def update(self):
-        self.updated = timezone(self.blog.config['blog']['timezone']).\
-            localize(datetime.now())
+        self.updated = timezone(self.blog.config["blog"]["timezone"]).localize(
+            datetime.now()
+        )
 
     def new(self, title, draft=False):
         """
@@ -83,12 +89,14 @@ class Post(object):
         self.title = title
         self.filename = newfile(slugify(self.title), draft)
         self.guid = str(uuidgen())
-        self.author = self.blog.config['blog']['defaultauthor']
-        self.categories = self.blog.config['blog']['categories']
+        self.author = self.blog.config["blog"]["defaultauthor"]
+        self.categories = self.blog.config["blog"]["categories"]
         self.updated = self.date
-        self.permalink = '{}/{}/{}'.format(self.blog.config['blog']['url'],
-                                           self.date.strftime('%Y/%m/%d'),
-                                           slugify(self.title))
+        self.permalink = "{}/{}/{}".format(
+            self.blog.config["blog"]["url"],
+            self.date.strftime("%Y/%m/%d"),
+            slugify(self.title),
+        )
         self.save()
         return self.filename
 
@@ -101,12 +109,14 @@ class Post(object):
                 "guid": self.guid,
                 "title": self.title,
                 "author": self.author,
-                "date": "{}".format(self.date.strftime(
-                    self.blog.config['blog']['dateformat'])),
+                "date": "{}".format(
+                    self.date.strftime(self.blog.config["blog"]["dateformat"])
+                ),
             }
             if self.updated is not self.date:
                 headers["updated"] = self.updated.strftime(
-                    self.blog.config['blog']['dateformat'])
+                    self.blog.config["blog"]["dateformat"]
+                )
             json.dump(headers, f, indent=1, ensure_ascii=False, sort_keys=True)
             f.write("\n---")
             if self._content:
@@ -115,9 +125,9 @@ class Post(object):
                 f.write("\n")
 
     def render(self):
-        blogurl = self.blog.config['blog']['url']
-        dirname = self.permalink.replace('{}/'.format(blogurl), '')
-        render('article.html', '{}/index.html'.format(dirname), post=self)
+        blogurl = self.blog.config["blog"]["url"]
+        dirname = self.permalink.replace("{}/".format(blogurl), "")
+        render("article.html", "{}/index.html".format(dirname), post=self)
 
     @property
     @pygmentify

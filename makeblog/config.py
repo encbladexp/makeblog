@@ -20,30 +20,30 @@ from urllib.parse import urlparse
 import json
 
 DEFAULT_CONFIG = {
-    'blog': {
-        'name': '''My's Blog''',
-        'url': 'http://blog.domain.tld',
-        'description': 'Because i can!',
-        'googleplus': True,
-        'twitter': True,
-        'flattr': True,
-        'categories': ['category1', 'category2', 'category4'],
-        'defaultauthor': 'me',
-        'timezone': 'Europe/Berlin',
-        'dateformat': '%Y/%m/%d %H:%M:%S'
+    "blog": {
+        "name": """My's Blog""",
+        "url": "http://blog.domain.tld",
+        "description": "Because i can!",
+        "googleplus": True,
+        "twitter": True,
+        "flattr": True,
+        "categories": ["category1", "category2", "category4"],
+        "defaultauthor": "me",
+        "timezone": "Europe/Berlin",
+        "dateformat": "%Y/%m/%d %H:%M:%S",
     },
-    'authors': {
-        'me': {
-            'name': 'Full Name',
-            'nick': 'nickname',
-            'googleplus': None,
-            'twitter': None,
-            'amazon': None,
-            'bitcoin': None,
-            'mail': None,
-            'flattr': None
+    "authors": {
+        "me": {
+            "name": "Full Name",
+            "nick": "nickname",
+            "googleplus": None,
+            "twitter": None,
+            "amazon": None,
+            "bitcoin": None,
+            "mail": None,
+            "flattr": None,
         }
-    }
+    },
 }
 
 
@@ -52,11 +52,11 @@ def readconfig():
     Load the configuration, to create a reliable loading of config.json
     on startup.
     """
-    if not access('config.json', F_OK):
+    if not access("config.json", F_OK):
         return False
-    with open('config.json', 'r') as f:
+    with open("config.json", "r") as f:
         config = json.load(f)
-        config['blog']['domain'] = urlparse(config['blog']['url']).netloc
+        config["blog"]["domain"] = urlparse(config["blog"]["url"]).netloc
     return config
 
 
@@ -64,12 +64,11 @@ def writedefaultconfig():
     """
     Create a configuration with sane defaults.
     """
-    for directory in ('src', 'posts', 'drafts', 'authors', 'plugins'):
+    for directory in ("src", "posts", "drafts", "authors", "plugins"):
         if not exists(directory):
             makedirs(directory)
-    if not access('config.json', F_OK):
-        with open('config.json', 'w') as f:
-            json.dump(DEFAULT_CONFIG, f, indent=1, ensure_ascii=False,
-                      sort_keys=True)
+    if not access("config.json", F_OK):
+        with open("config.json", "w") as f:
+            json.dump(DEFAULT_CONFIG, f, indent=1, ensure_ascii=False, sort_keys=True)
         return False
     return True

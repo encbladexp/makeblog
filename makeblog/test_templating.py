@@ -27,32 +27,33 @@ class TestBlog(object):
     """
 
     def __init__(self):
-        self.config = {'blog': {'timezone': 'Europe/Berlin',
-                                'dateformat': '%Y/%m/%d %H:%M:%S',
-                                'url': 'http://www.example.com',
-                                'defaultauthor': 'authorname',
-                                'categories': 'category1, category2',
-                                'name': 'My TestBlog',
-                                'description': 'My Description'
-                                }
-                       }
+        self.config = {
+            "blog": {
+                "timezone": "Europe/Berlin",
+                "dateformat": "%Y/%m/%d %H:%M:%S",
+                "url": "http://www.example.com",
+                "defaultauthor": "authorname",
+                "categories": "category1, category2",
+                "name": "My TestBlog",
+                "description": "My Description",
+            }
+        }
 
 
 class TestTemplating(TestCase):
-
     def setUp(self):
-        mkdir('dst')
+        mkdir("dst")
 
     def test_jinja(self):
         self.assertIsInstance(jinja, Environment)
 
     def test_render(self):
         # Workaround for Python < 3.4
-        if 'blog' not in jinja.globals:
-            jinja.globals['blog'] = TestBlog()
-            jinja.globals['now'] = datetime.utcnow()
-        render('site.html', 'test.html')
-        self.assertTrue(access('dst/test.html', F_OK))
+        if "blog" not in jinja.globals:
+            jinja.globals["blog"] = TestBlog()
+            jinja.globals["now"] = datetime.utcnow()
+        render("site.html", "test.html")
+        self.assertTrue(access("dst/test.html", F_OK))
 
     def tearDown(self):
-        rmtree('dst')
+        rmtree("dst")

@@ -19,9 +19,8 @@ from makeblog.server import Server
 
 
 class TestServer(TestCase):
-
     def setUp(self):
-        mkdir('dst')
+        mkdir("dst")
 
     def test_server_init(self):
         s = Server()
@@ -29,4 +28,4 @@ class TestServer(TestCase):
         s.httpd.socket.close()
 
     def tearDown(self):
-        rmdir('dst')
+        rmdir("dst")

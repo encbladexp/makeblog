@@ -16,8 +16,12 @@
 from makeblog.post import Post
 from makeblog.author import Author
 from makeblog.templating import jinja, render
-from makeblog.plugins import PluginMount, PreRenderPlugin, RenderPlugin,\
-    PostRenderPlugin
+from makeblog.plugins import (
+    PluginMount,
+    PreRenderPlugin,
+    RenderPlugin,
+    PostRenderPlugin,
+)
 from datetime import datetime
 from operator import attrgetter
 from os import listdir, system, walk
@@ -33,8 +37,8 @@ class Blog(object):
 
     def build(self, draft=False):  # pragma: no cover
         # config
-        jinja.globals['blog'] = self
-        jinja.globals['now'] = datetime.utcnow()
+        jinja.globals["blog"] = self
+        jinja.globals["now"] = datetime.utcnow()
         self.draft = draft
         # run pre render plugins
         for plugin in PluginMount.get_plugins(PreRenderPlugin, self):
@@ -52,14 +56,14 @@ class LoadPosts(PreRenderPlugin):
 
     def run(self):
         # load all posts
-        for filename in listdir('posts'):
+        for filename in listdir("posts"):
             p = Post(self.blog)
-            p.load('posts/{}'.format(filename))
+            p.load("posts/{}".format(filename))
             self.blog.posts.append(p)
         if self.blog.draft:
-            for filename in listdir('drafts'):
+            for filename in listdir("drafts"):
                 p = Post(self.blog)
-                p.load('drafts/{}'.format(filename))
+                p.load("drafts/{}".format(filename))
                 self.blog.posts.append(p)
 
 
@@ -69,9 +73,12 @@ class LoadAuthors(PreRenderPlugin):
     def run(self):
         # load all authors
         self.blog.authors = sorted(
-            [Author(self.blog.config['authors'][item])
-             for item in self.blog.config['authors'].keys()],
-            key=attrgetter('nick'))
+            [
+                Author(self.blog.config["authors"][item])
+                for item in self.blog.config["authors"].keys()
+            ],
+            key=attrgetter("nick"),
+        )
 
 
 class SortPosts(PreRenderPlugin):
@@ -79,7 +86,7 @@ class SortPosts(PreRenderPlugin):
 
     def run(self):
         # sort posts by date
-        self.blog.posts = sorted(self.blog.posts, key=attrgetter('date'))
+        self.blog.posts = sorted(self.blog.posts, key=attrgetter("date"))
 
 
 class SortPostsAuthor(PreRenderPlugin):
@@ -88,7 +95,9 @@ class SortPostsAuthor(PreRenderPlugin):
     def run(self):
         # sort posts to authors
         for author in self.blog.authors:
-            author.posts = [post for post in self.blog.posts if post.author == author.nick]
+            author.posts = [
+                post for post in self.blog.posts if post.author == author.nick
+            ]
 
 
 class CountPostsAuthor(PreRenderPlugin):
@@ -106,7 +115,7 @@ class PercentPostsAuthor(PreRenderPlugin):
     def run(self):
         # calculate % of author posts
         for author in self.blog.authors:
-            author.post_percent = 100/len(self.blog.posts)*author.post_count
+            author.post_percent = 100 / len(self.blog.posts) * author.post_count
 
 
 class FristLastAuthorPosts(PreRenderPlugin):
@@ -131,9 +140,9 @@ class LinkPosts(PreRenderPlugin):
         for post in self.blog.posts:
             i = self.blog.posts.index(post)
             if i:
-                post.prev = self.blog.posts[i-1]
-            if i != len(self.blog.posts)-1:
-                post.next = self.blog.posts[i+1]
+                post.prev = self.blog.posts[i - 1]
+            if i != len(self.blog.posts) - 1:
+                post.next = self.blog.posts[i + 1]
 
 
 class CategorizePosts(PreRenderPlugin):
@@ -153,7 +162,7 @@ class RsyncStaticPlugin(PreRenderPlugin):  # pragma: no cover
 
     def run(self):
         # rsync src/ to dst/ for static stuff
-        system('rsync -a src/ dst')
+        system("rsync -a src/ dst")
 
 
 class ArticleRenderer(RenderPlugin):
@@ -172,7 +181,7 @@ class IndexRenderer(RenderPlugin):
         # render index page
         startposts = self.blog.posts[-5:]
         startposts.reverse()
-        render('chronological.html', 'index.html', posts=startposts)
+        render("chronological.html", "index.html", posts=startposts)
 
 
 class FeedRenderer(RenderPlugin):
@@ -182,7 +191,7 @@ class FeedRenderer(RenderPlugin):
         # render main feed
         feedposts = self.blog.posts[-10:]
         feedposts.reverse()
-        render('atom.html', 'feed.atom', posts=feedposts)
+        render("atom.html", "feed.atom", posts=feedposts)
 
 
 class CategoryPageRenderer(RenderPlugin):
@@ -191,10 +200,16 @@ class CategoryPageRenderer(RenderPlugin):
     def render(self):
         # render category pages
         for category in self.blog.categoryposts.keys():
-            thisposts = sorted(self.blog.categoryposts[category], key=attrgetter('date'))
+            thisposts = sorted(
+                self.blog.categoryposts[category], key=attrgetter("date")
+            )
             thisposts.reverse()
-            render('category.html', 'category/{}/index.html'.format(category),
-                   category=category, posts=thisposts)
+            render(
+                "category.html",
+                "category/{}/index.html".format(category),
+                category=category,
+                posts=thisposts,
+            )
 
 
 class CategoryIndexRenderer(RenderPlugin):
@@ -204,7 +219,7 @@ class CategoryIndexRenderer(RenderPlugin):
         # render category index
         categories = list(self.blog.categoryposts.keys())
         categories.sort()
-        render('categories.html', 'category/index.html', categories=categories)
+        render("categories.html", "category/index.html", categories=categories)
 
 
 class CategoryFeedRenderer(RenderPlugin):
@@ -213,11 +228,13 @@ class CategoryFeedRenderer(RenderPlugin):
     def render(self):
         # render category feeds
         for category in self.blog.categoryposts.keys():
-            feedposts = sorted(self.blog.categoryposts[category],
-                               key=attrgetter('date'))[-10:]
+            feedposts = sorted(
+                self.blog.categoryposts[category], key=attrgetter("date")
+            )[-10:]
             feedposts.reverse()
-            render('atom.html', 'category/{}/feed.atom'.format(category),
-                   posts=feedposts)
+            render(
+                "atom.html", "category/{}/feed.atom".format(category), posts=feedposts
+            )
 
 
 class ArchiveRenderer(RenderPlugin):
@@ -234,19 +251,27 @@ class ArchiveRenderer(RenderPlugin):
             timeposts[post.date.year][post.date.month].append(post)
         for year in timeposts.keys():
             for month in timeposts[year].keys():
-                archiveposts = sorted(timeposts[year][month],
-                                      key=attrgetter('date'))
+                archiveposts = sorted(timeposts[year][month], key=attrgetter("date"))
                 archiveposts.reverse()
-                render('archive-posts.html',
-                       'archive/{}/{}/index.html'.format(year, month),
-                       year=year, month=month, posts=archiveposts)
+                render(
+                    "archive-posts.html",
+                    "archive/{}/{}/index.html".format(year, month),
+                    year=year,
+                    month=month,
+                    posts=archiveposts,
+                )
             months = list(timeposts[year].keys())
             months.sort()
-            render('archive-annual.html', 'archive/{}/index.html'.format(year),
-                   months=months, year=year, yearposts=timeposts[year])
+            render(
+                "archive-annual.html",
+                "archive/{}/index.html".format(year),
+                months=months,
+                year=year,
+                yearposts=timeposts[year],
+            )
         years = list(timeposts.keys())
         years.sort()
-        render('archive.html', 'archive/index.html', years=years)
+        render("archive.html", "archive/index.html", years=years)
 
 
 class StaticRenderer(RenderPlugin):
@@ -254,11 +279,11 @@ class StaticRenderer(RenderPlugin):
 
     def render(self):
         # static page rendering
-        for path, directories, files in walk('src/'):
+        for path, directories, files in walk("src/"):
             for filename in files:
-                if filename.endswith('.html'):
-                    fname = '{}/{}'.format(path.replace('src/', ''), filename)
-                    render('{}/{}'.format(path, filename), fname)
+                if filename.endswith(".html"):
+                    fname = "{}/{}".format(path.replace("src/", ""), filename)
+                    render("{}/{}".format(path, filename), fname)
 
 
 class AuthorIndexRenderer(RenderPlugin):
@@ -266,7 +291,7 @@ class AuthorIndexRenderer(RenderPlugin):
 
     def render(self):
         # render author index
-        render('author-index.html', 'author/index.html', authors=self.blog.authors)
+        render("author-index.html", "author/index.html", authors=self.blog.authors)
 
 
 class AuthorPageRenderer(RenderPlugin):
@@ -275,4 +300,6 @@ class AuthorPageRenderer(RenderPlugin):
     def render(self):
         # render author pages
         for author in self.blog.authors:
-            render('author.html', 'author/{}/index.html'.format(author.nick), author=author)
+            render(
+                "author.html", "author/{}/index.html".format(author.nick), author=author
+            )

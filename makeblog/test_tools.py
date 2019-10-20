@@ -19,7 +19,6 @@ from makeblog.tools import slugify, directorymaker, newfile, parse_args
 
 
 class TestSlugify(TestCase):
-
     def test_simpleslug(self):
         self.assertEqual(slugify("Test"), "test")
 
@@ -37,7 +36,6 @@ class TestSlugify(TestCase):
 
 
 class TestDirectorymaker(TestCase):
-
     def test_simpledir(self):
         self.assertEqual(directorymaker("test"), "dst/test")
         self.assertTrue(access("dst", F_OK))
@@ -48,23 +46,22 @@ class TestDirectorymaker(TestCase):
 
 
 class TestNewfile(TestCase):
-
     def setUp(self):
-        mkdir('posts')
-        mkdir('drafts')
+        mkdir("posts")
+        mkdir("drafts")
         parse_args()
 
     def test_newfile(self):
-        self.assertEqual(newfile('test'), 'posts/1-test.html')
-        with open('posts/1-test.html', 'w') as f:
-            f.write('test')
-        self.assertEqual(newfile('test'), 'posts/2-test.html')
+        self.assertEqual(newfile("test"), "posts/1-test.html")
+        with open("posts/1-test.html", "w") as f:
+            f.write("test")
+        self.assertEqual(newfile("test"), "posts/2-test.html")
 
     def test_draft(self):
-        self.assertEqual(newfile('test', True), 'drafts/1-test.html')
+        self.assertEqual(newfile("test", True), "drafts/1-test.html")
 
     def tearDown(self):
-        if access('posts/1-test.html', F_OK):
-            unlink('posts/1-test.html')
-        rmdir('posts')
-        rmdir('drafts')
+        if access("posts/1-test.html", F_OK):
+            unlink("posts/1-test.html")
+        rmdir("posts")
+        rmdir("drafts")

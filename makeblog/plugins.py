@@ -28,22 +28,22 @@ def load_plugins(path):
     """
     for plugindir in walk(path):
         for pluginfile in plugindir[2]:
-            if pluginfile.endswith('.py'):
-                plugin = "{}.{}".format(plugindir[0].replace('/', '.'),
-                                        pluginfile[:-3])
+            if pluginfile.endswith(".py"):
+                plugin = "{}.{}".format(plugindir[0].replace("/", "."), pluginfile[:-3])
                 import_module(plugin)
 
 
 class PluginMount(type):
     def __init__(cls, name, bases, attrs):
-        if not hasattr(cls, 'plugins'):
+        if not hasattr(cls, "plugins"):
             cls.plugins = []
         else:
             cls.plugins.append(cls)
 
     def get_plugins(cls, *args, **kwargs):
-        return [p(*args, **kwargs) for p in sorted(cls.plugins,
-                                                   key=attrgetter('priority'))]
+        return [
+            p(*args, **kwargs) for p in sorted(cls.plugins, key=attrgetter("priority"))
+        ]
 
 
 class PluginMixin(object):
@@ -54,13 +54,11 @@ class PluginMixin(object):
 
 
 class RenderPluginMixin(object):
-
     def render(self):  # pragma: no cover
         pass
 
 
 class RunPluginMixin(object):
-
     def run(self):  # pragma: no cover
         pass
 

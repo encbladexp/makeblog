@@ -16,41 +16,40 @@
 
 
 class Author(object):
-
     def __init__(self, data):
         self.data = data
 
     @property
     def name(self):
-        return self.data['name'] if 'name' in self.data else None
+        return self.data["name"] if "name" in self.data else None
 
     @property
     def nick(self):
-        return self.data['nick'] if 'nick' in self.data else None
+        return self.data["nick"] if "nick" in self.data else None
 
     @property
     def googleplus(self):
-        return self.data['googleplus'] if 'googleplus' in self.data else None
+        return self.data["googleplus"] if "googleplus" in self.data else None
 
     @property
     def twitter(self):
-        return self.data['twitter'] if 'twitter' in self.data else None
+        return self.data["twitter"] if "twitter" in self.data else None
 
     @property
     def amazon(self):
-        return self.data['amazon'] if 'amazon' in self.data else None
+        return self.data["amazon"] if "amazon" in self.data else None
 
     @property
     def bitcoin(self):
-        return self.data['bitcoin'] if 'bitcoin' in self.data else None
+        return self.data["bitcoin"] if "bitcoin" in self.data else None
 
     @property
     def mail(self):
-        return self.data['mail'] if 'mail' in self.data else None
+        return self.data["mail"] if "mail" in self.data else None
 
     @property
     def flattr(self):
-        return self.data['flattr'] if 'flattr' in self.data else None
+        return self.data["flattr"] if "flattr" in self.data else None
 
     @property
     def has_contact(self):

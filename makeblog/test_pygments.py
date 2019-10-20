@@ -40,9 +40,7 @@ $$/code
 
 
 class TestPygments(TestCase):
-
     def test_pygmentify(self):
-
         @pygmentify
         def render(content):
             return content
@@ -52,4 +50,4 @@ class TestPygments(TestCase):
         self.assertIsInstance(render(CONTENT_WITH_MISSING_LEXER), str)
 
     def tearDown(self):
-        rmtree('dst')
+        rmtree("dst")

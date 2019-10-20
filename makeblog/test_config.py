@@ -19,18 +19,17 @@ from makeblog.config import readconfig, writedefaultconfig
 
 
 class TestWritedefaultconfig(TestCase):
-
     def test_firstrun(self):
         """
         writedefaultconfig() creates all directories and config files on the
         first run. After that False is returned.
         """
         self.assertFalse(writedefaultconfig())
-        self.assertTrue(access('src', F_OK))
-        self.assertTrue(access('posts', F_OK))
-        self.assertTrue(access('drafts', F_OK))
-        self.assertTrue(access('authors', F_OK))
-        self.assertTrue(access('config.json', F_OK))
+        self.assertTrue(access("src", F_OK))
+        self.assertTrue(access("posts", F_OK))
+        self.assertTrue(access("drafts", F_OK))
+        self.assertTrue(access("authors", F_OK))
+        self.assertTrue(access("config.json", F_OK))
 
     def test_secondrun(self):
         """
@@ -40,13 +39,12 @@ class TestWritedefaultconfig(TestCase):
         self.assertTrue(writedefaultconfig())
 
     def tearDown(self):
-        unlink('config.json')
-        for directory in ('src', 'posts', 'drafts', 'authors','plugins'):
+        unlink("config.json")
+        for directory in ("src", "posts", "drafts", "authors", "plugins"):
             rmdir(directory)
 
 
 class TestReadconfig(TestCase):
-
     def test_readconfig(self):
         self.assertFalse(readconfig())
         writedefaultconfig()
@@ -54,5 +52,5 @@ class TestReadconfig(TestCase):
         self.assertIsInstance(readconfig(), dict)
 
     def tearDown(self):
-        if access('config.json', F_OK):
-            unlink('config.json')
+        if access("config.json", F_OK):
+            unlink("config.json")

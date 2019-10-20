@@ -16,11 +16,16 @@
 from unittest import TestCase
 from os import mkdir
 from shutil import rmtree
-from makeblog.plugins import load_plugins, PluginMount, PreRenderPlugin, PostRenderPlugin, RenderPlugin
+from makeblog.plugins import (
+    load_plugins,
+    PluginMount,
+    PreRenderPlugin,
+    PostRenderPlugin,
+    RenderPlugin,
+)
 
 
 class TestPluginMount(TestCase):
-
     def test_get_plugins(self):
         self.assertIsInstance(PluginMount.get_plugins(PreRenderPlugin, None), list)
         self.assertIsInstance(PluginMount.get_plugins(PostRenderPlugin, None), list)
@@ -28,14 +33,13 @@ class TestPluginMount(TestCase):
 
 
 class TestPluginLoader(TestCase):
-
     def setUp(self):
-        mkdir('plugins')
-        with open('plugins/test.py','w') as f:
-            f.write('')
+        mkdir("plugins")
+        with open("plugins/test.py", "w") as f:
+            f.write("")
 
     def test_load_plugins(self):
-        load_plugins('plugins')
+        load_plugins("plugins")
 
     def tearDown(self):
-        rmtree('plugins')
+        rmtree("plugins")

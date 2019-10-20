@@ -20,7 +20,7 @@ from shutil import rmtree
 from makeblog.post import Post
 from makeblog.templating import jinja
 
-EXAMPLE_POST = '''
+EXAMPLE_POST = """
 ---
 {
  "date": "2008/10/04 19:39:00",
@@ -34,9 +34,9 @@ EXAMPLE_POST = '''
 }
 ---
 <p>Testtext.</p>
-'''
+"""
 
-EXAMPLE_POST_WITHOUT_PERMALINK = '''
+EXAMPLE_POST_WITHOUT_PERMALINK = """
 ---
 {
  "date": "2008/10/05 19:39:00",
@@ -49,9 +49,9 @@ EXAMPLE_POST_WITHOUT_PERMALINK = '''
 }
 ---
 <p>Testtext.</p>
-'''
+"""
 
-EXAMPLE_POST_WITH_GUID_TAG = '''
+EXAMPLE_POST_WITH_GUID_TAG = """
 ---
 {
  "date": "2008/10/04 19:39:00",
@@ -65,7 +65,7 @@ EXAMPLE_POST_WITH_GUID_TAG = '''
 }
 ---
 <p>Testtext.</p>
-'''
+"""
 
 
 class TestBlog(object):
@@ -74,28 +74,29 @@ class TestBlog(object):
     """
 
     def __init__(self):
-        self.config = {'blog': {'timezone': 'Europe/Berlin',
-                                'dateformat': '%Y/%m/%d %H:%M:%S',
-                                'url': 'http://www.example.com',
-                                'defaultauthor': 'authorname',
-                                'categories': 'category1, category2',
-                                'name': 'My TestBlog',
-                                'description': 'My Description'
-                                }
-                       }
+        self.config = {
+            "blog": {
+                "timezone": "Europe/Berlin",
+                "dateformat": "%Y/%m/%d %H:%M:%S",
+                "url": "http://www.example.com",
+                "defaultauthor": "authorname",
+                "categories": "category1, category2",
+                "name": "My TestBlog",
+                "description": "My Description",
+            }
+        }
 
 
 class TestPost(TestCase):
-
     def setUp(self):
-        mkdir('dst')
-        mkdir('posts')
-        mkdir('drafts')
-        with open('posts/1-example.html', 'w') as f:
+        mkdir("dst")
+        mkdir("posts")
+        mkdir("drafts")
+        with open("posts/1-example.html", "w") as f:
             f.write(EXAMPLE_POST)
-        with open('posts/2-example.html', 'w') as f:
+        with open("posts/2-example.html", "w") as f:
             f.write(EXAMPLE_POST_WITHOUT_PERMALINK)
-        with open('posts/3-example.html', 'w') as f:
+        with open("posts/3-example.html", "w") as f:
             f.write(EXAMPLE_POST_WITH_GUID_TAG)
 
     def test_init(self):
@@ -113,49 +114,51 @@ class TestPost(TestCase):
     def test_content(self):
         blog = TestBlog()
         post = Post(blog)
-        post._content = 'Example Content'
+        post._content = "Example Content"
         self.assertIsInstance(post.content, str)
 
     def test_load(self):
         blog = TestBlog()
         post = Post(blog)
-        post.load('posts/1-example.html')
+        post.load("posts/1-example.html")
 
     def test_load_without_permalink(self):
         blog = TestBlog()
         post = Post(blog)
-        post.load('posts/2-example.html')
+        post.load("posts/2-example.html")
 
     def test_save(self):
         blog = TestBlog()
         post = Post(blog)
-        post.load('posts/1-example.html')
+        post.load("posts/1-example.html")
         post.save()
 
     def test_new(self):
         blog = TestBlog()
         post = Post(blog)
-        rvalue = post.new('Titel')
+        rvalue = post.new("Titel")
         self.assertIsInstance(rvalue, str)
 
     def test_render(self):
         blog = TestBlog()
         post = Post(blog)
-        post.load('posts/1-example.html')
-        jinja.globals['blog'] = blog
-        jinja.globals['now'] = datetime.utcnow()
+        post.load("posts/1-example.html")
+        jinja.globals["blog"] = blog
+        jinja.globals["now"] = datetime.utcnow()
         post.render()
 
     def test_uuid(self):
         blog = TestBlog()
         post_uuid = Post(blog)
-        post_uuid.load('posts/1-example.html')
-        self.assertEqual(post_uuid.guid, 'urn:uuid:beba81bf-9ac1-4795-9569-c1bbd876677f')
+        post_uuid.load("posts/1-example.html")
+        self.assertEqual(
+            post_uuid.guid, "urn:uuid:beba81bf-9ac1-4795-9569-c1bbd876677f"
+        )
         post_tag = Post(blog)
-        post_tag.load('posts/3-example.html')
-        self.assertEqual(post_tag.guid, 'tag:some-old-content-from-zine')
+        post_tag.load("posts/3-example.html")
+        self.assertEqual(post_tag.guid, "tag:some-old-content-from-zine")
 
     def tearDown(self):
-        rmtree('dst')
-        rmtree('posts')
-        rmtree('drafts')
+        rmtree("dst")
+        rmtree("posts")
+        rmtree("drafts")
