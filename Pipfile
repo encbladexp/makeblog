@@ -5,7 +5,7 @@ name = "pypi"
 
 [packages]
 pytz = "==2019.3"
-Jinja2 = "==2.10.3"
+Jinja2 = "==2.11.1"
 Pygments = "==2.4.2"
 makeblog = {editable = true,path = "."}
 
