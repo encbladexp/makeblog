@@ -12,5 +12,5 @@ makeblog = {editable = true,path = "."}
 [dev-packages]
 bumpversion = "==0.5.3"
 coverage = "==4.5.4"
-flake8 = "==3.7.8"
+flake8 = "==3.7.9"
 black = "==19.3b0"
